@@ -316,4 +316,4 @@ Other 3rd party packages directly used by this package are released under their 
 
 * github.com/getsentry/sentry-go - [BSD 2 Clause](https://github.com/getsentry/sentry-go/blob/master/LICENSE)  
 * github.com/go-logfmt/logfmt - [MIT License](https://github.com/go-logfmt/logfmt/blob/main/LICENSE)  
-* github.com/actforgood/xerr - [MIT License](https://github.com/actforgood/xerr/main/LICENSE)  
+* github.com/actforgood/xerr - [MIT License](https://github.com/actforgood/xerr/blob/main/LICENSE)  
