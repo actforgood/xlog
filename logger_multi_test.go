@@ -6,6 +6,7 @@
 package xlog_test
 
 import (
+	"errors"
 	"io/ioutil"
 	"os"
 	"testing"
@@ -48,7 +49,7 @@ func ExampleMultiLogger_splitMessagesByLevel() {
 	logger.Error("msg", "I get written to standard error")
 
 	// Output:
-	// {"date":"2022-03-20T16:01:20Z","lvl":"DEBUG","msg":"I get written to standard output","src":"/logger_multi_test.go:47"}
+	// {"date":"2022-03-20T16:01:20Z","lvl":"DEBUG","msg":"I get written to standard output","src":"/logger_multi_test.go:48"}
 }
 
 func ExampleMultiLogger_logToStdOutAndCustomFile() {
@@ -83,7 +84,7 @@ func ExampleMultiLogger_logToStdOutAndCustomFile() {
 
 	logger := xlog.NewMultiLogger(stdOutLgr, fileLgr)
 	defer func() {
-		logger.Close()
+		_ = logger.Close()
 		_ = f.Close()
 		_ = os.Remove(f.Name()) // you won't remove the file
 	}()
@@ -91,7 +92,7 @@ func ExampleMultiLogger_logToStdOutAndCustomFile() {
 	logger.Debug("msg", "I get written to standard output and to a file")
 
 	// Output:
-	// {"date":"2022-03-15T16:01:20Z","lvl":"DEBUG","msg":"I get written to standard output and to a file","src":"/logger_multi_test.go:91"}
+	// {"date":"2022-03-15T16:01:20Z","lvl":"DEBUG","msg":"I get written to standard output and to a file","src":"/logger_multi_test.go:92"}
 }
 
 func TestMultiLogger_logsOnEveryLogger(t *testing.T) {
@@ -140,18 +141,25 @@ func TestMultiLogger_Close_closesAllLoggers(t *testing.T) {
 
 	// arrange
 	var (
-		loggers = []xlog.Logger{
-			xlog.NewMockLogger(),
-			xlog.NewMockLogger(),
-			xlog.NewMockLogger(),
-		}
-		subject = xlog.NewMultiLogger(loggers...)
+		logger1            = xlog.NewMockLogger()
+		logger2            = xlog.NewMockLogger()
+		logger3            = xlog.NewMockLogger()
+		loggers            = []xlog.Logger{logger1, logger2, logger3}
+		subject            = xlog.NewMultiLogger(loggers...)
+		expectedLogger1Err = errors.New("intentionally triggered logger 1 Close error")
+		expectedLogger3Err = errors.New("intentionally triggered logger 3 Close error")
 	)
+	logger1.SetCloseError(expectedLogger1Err)
+	logger3.SetCloseError(expectedLogger3Err)
 
 	// act
-	subject.Close()
+	err := subject.Close()
 
 	// assert
+	if assertNotNil(t, err) {
+		assertTrue(t, errors.Is(err, expectedLogger1Err))
+		assertTrue(t, errors.Is(err, expectedLogger3Err))
+	}
 	for _, logger := range loggers {
 		lgr := logger.(*xlog.MockLogger)
 		assertEqual(t, 1, lgr.CloseCallsCount())

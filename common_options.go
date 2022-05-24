@@ -240,7 +240,9 @@ func AppendNoValue(keyValues []interface{}) []interface{} {
 // StackErr return "%+v" fmt representation of an error.
 // Can be useful to log stack of errors created with
 // "github.com/pkg/errors" / "github.com/actforgood/xerr" packages.
-// Example of usage: logger.Error(xlog.ErrorKey, xlog.StackErr(errWithStack), ...)
+// Example of usage:
+//		logger.Error(xlog.ErrorKey, xlog.StackErr(errWithStack), ...)
+//
 func StackErr(err error) string {
 	return fmt.Sprintf("%+v", err)
 }

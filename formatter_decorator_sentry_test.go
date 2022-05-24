@@ -47,7 +47,7 @@ func ExampleSyncLogger_withSentry() {
 		)),
 	)
 	defer func() {
-		logger.Close()
+		_ = logger.Close()
 		_ = sentry.Flush(2 * time.Second)
 	}()
 
@@ -228,7 +228,7 @@ func BenchmarkSentryFormatter_json_syncLogger(b *testing.B) {
 		)),
 	)
 	defer func() {
-		logger.Close()
+		_ = logger.Close()
 		_ = sentryHub.Flush(2 * time.Second)
 	}()
 	kv := getBenchmarkKeyVals()
@@ -255,7 +255,7 @@ func BenchmarkSentryFormatter_json_asyncLogger(b *testing.B) {
 		)),
 	)
 	defer func() {
-		logger.Close()
+		_ = logger.Close()
 		_ = sentryHub.Flush(2 * time.Second)
 	}()
 	kv := getBenchmarkKeyVals()

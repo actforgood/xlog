@@ -141,7 +141,7 @@ func testSyncLoggerLogSuccessful(testLvl xlog.Level) func(t *testing.T) {
 
 		// act
 		callMethodByLevel(subject, testLvl)
-		subject.Close()
+		_ = subject.Close()
 
 		// assert
 		assertEqual(t, 1, formatter.FormatCallsCount())
@@ -176,7 +176,7 @@ func testSyncLoggerLogIgnored(testLvl xlog.Level) func(t *testing.T) {
 
 		// act
 		callMethodByLevel(subject, testLvl)
-		subject.Close()
+		_ = subject.Close()
 
 		// assert
 		assertEqual(t, 0, formatter.FormatCallsCount())
@@ -214,7 +214,7 @@ func testSyncLoggerLogFormatErr(testLvl xlog.Level) func(t *testing.T) {
 
 		// act
 		callMethodByLevel(subject, testLvl)
-		subject.Close()
+		_ = subject.Close()
 
 		// assert
 		assertEqual(t, 1, formatter.FormatCallsCount())
@@ -238,7 +238,7 @@ func TestSyncLogger_Close_withBufferedWriter(t *testing.T) {
 	subject.Error("msg", "foo bar")
 
 	// act
-	subject.Close() // will call Stop on bufWriter, and log gets flushed.
+	_ = subject.Close() // will call Stop on bufWriter, and log gets flushed.
 
 	// assert
 	log, err := writer.ReadString('\n')
@@ -284,7 +284,7 @@ func TestSyncLogger_concurrency(t *testing.T) {
 		}(subject, i)
 	}
 	wg.Wait()
-	subject.Close()
+	_ = subject.Close()
 
 	// assert
 	var linesCount, sum int
@@ -352,7 +352,7 @@ func BenchmarkSyncLogger_json_withFileWriter(b *testing.B) {
 	f := setUpFile(b.Name())
 	subject := makeSyncLogger(f)
 	defer func() {
-		subject.Close()
+		_ = subject.Close()
 		tearDownFile(f)
 	}()
 	kv := getBenchmarkKeyVals()
@@ -369,7 +369,7 @@ func BenchmarkSyncLogger_json_withBufferedFileWriter(b *testing.B) {
 	f := setUpFile(b.Name())
 	subject := makeSyncLogger(xlog.NewBufferedWriter(f))
 	defer func() {
-		subject.Close()
+		_ = subject.Close()
 		tearDownFile(f)
 	}()
 	kv := getBenchmarkKeyVals()

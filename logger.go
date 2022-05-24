@@ -5,10 +5,14 @@
 
 package xlog
 
+import "io"
+
 // Logger provides prototype for logging with different levels.
 // It is designed to accept variadic parameters useful for a
 // structured logger.
 type Logger interface {
+	io.Closer
+
 	// Critical logs application component unavailable, fatal events.
 	Critical(keyValues ...interface{})
 
@@ -30,10 +34,4 @@ type Logger interface {
 
 	// Log logs arbitrary data.
 	Log(keyValues ...interface{})
-
-	// Close performs clean up actions, closes resources,
-	// avoids memory leaks, etc.
-	// Make sure to call it at your application shutdown
-	// for example.
-	Close()
 }

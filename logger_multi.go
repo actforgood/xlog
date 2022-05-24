@@ -5,6 +5,8 @@
 
 package xlog
 
+import "github.com/actforgood/xerr"
+
 // MultiLogger is a composite Logger capable of
 // logging to multiple loggers.
 type MultiLogger struct {
@@ -70,8 +72,13 @@ func (logger *MultiLogger) Log(keyValues ...interface{}) {
 // avoids memory leaks, etc.
 // Make sure to call it at your application shutdown
 // for example.
-func (logger *MultiLogger) Close() {
+func (logger *MultiLogger) Close() error {
+	mErr := xerr.NewMultiError()
 	for _, lgr := range logger.loggers {
-		lgr.Close()
+		if err := lgr.Close(); err != nil {
+			mErr.Add(err)
+		}
 	}
+
+	return mErr.ErrOrNil()
 }

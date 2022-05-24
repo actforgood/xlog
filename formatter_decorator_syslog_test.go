@@ -42,7 +42,7 @@ func ExampleSyncLogger_withSyslog() {
 		xlog.SyncLoggerWithOptions(opts),
 	)
 	defer func() {
-		logger.Close()
+		_ = logger.Close()
 		_ = syslogWriter.Close()
 	}()
 
@@ -90,7 +90,7 @@ func ExampleSyncLogger_withSyslogSupportingAllSyslogLevels() {
 		xlog.SyncLoggerWithOptions(opts),
 	)
 	defer func() {
-		logger.Close()
+		_ = logger.Close()
 		_ = syslogWriter.Close()
 	}()
 
@@ -316,7 +316,7 @@ func BenchmarkSyslogFormatter_json_syncLogger(b *testing.B) {
 		)),
 	)
 	defer func() {
-		logger.Close()
+		_ = logger.Close()
 		_ = writer.Close()
 	}()
 	kv := getBenchmarkKeyVals()
@@ -343,7 +343,7 @@ func BenchmarkSyslogFormatter_json_asyncLogger(b *testing.B) {
 		)),
 	)
 	defer func() {
-		logger.Close()
+		_ = logger.Close()
 		_ = writer.Close()
 	}()
 	kv := getBenchmarkKeyVals()

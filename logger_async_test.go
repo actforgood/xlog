@@ -142,7 +142,7 @@ func testAsyncLoggerLogSuccessful(testLvl xlog.Level) func(t *testing.T) {
 
 		// act
 		callMethodByLevel(subject, testLvl)
-		subject.Close()
+		_ = subject.Close()
 
 		// assert
 		assertEqual(t, 1, formatter.FormatCallsCount())
@@ -178,7 +178,7 @@ func testAsyncLoggerLogIgnored(testLvl xlog.Level) func(t *testing.T) {
 
 		// act
 		callMethodByLevel(subject, testLvl)
-		subject.Close()
+		_ = subject.Close()
 
 		// assert
 		assertEqual(t, 0, formatter.FormatCallsCount())
@@ -216,7 +216,7 @@ func testAsyncLoggerLogFormatErr(testLvl xlog.Level) func(t *testing.T) {
 
 		// act
 		callMethodByLevel(subject, testLvl)
-		subject.Close()
+		_ = subject.Close()
 
 		// assert
 		assertEqual(t, 1, formatter.FormatCallsCount())
@@ -243,7 +243,7 @@ func TestAsyncLogger_Close_withBufferedWriter(t *testing.T) {
 	subject.Error("msg", "foo bar")
 
 	// act
-	subject.Close() // will call Stop on bufWriter, and log gets flushed.
+	_ = subject.Close() // will call Stop on bufWriter, and log gets flushed.
 
 	// assert
 	log, err := writer.ReadString('\n')
@@ -312,7 +312,7 @@ func TestAsyncLogger_concurrency(t *testing.T) {
 				}(test.subject, i)
 			}
 			wg.Wait()
-			test.subject.Close()
+			_ = test.subject.Close()
 
 			// assert
 			var linesCount, sum int
@@ -395,7 +395,7 @@ func BenchmarkAsyncLogger_json_withFileWriter_with256ChanSize_with1Worker(b *tes
 	f := setUpFile(b.Name())
 	subject := makeAsyncLogger(f, 256, 1)
 	defer func() {
-		subject.Close()
+		_ = subject.Close()
 		tearDownFile(f)
 	}()
 	kv := getBenchmarkKeyVals()
@@ -412,7 +412,7 @@ func BenchmarkAsyncLogger_json_withBufferedFileWriter_with256ChanSize_with1Worke
 	f := setUpFile(b.Name())
 	subject := makeAsyncLogger(xlog.NewBufferedWriter(f), 256, 1)
 	defer func() {
-		subject.Close()
+		_ = subject.Close()
 		tearDownFile(f)
 	}()
 	kv := getBenchmarkKeyVals()
@@ -429,7 +429,7 @@ func BenchmarkAsyncLogger_json_withFileWriter_with1024ChanSize_with4Workers(b *t
 	f := setUpFile(b.Name())
 	subject := makeAsyncLogger(f, 1024, 4)
 	defer func() {
-		subject.Close()
+		_ = subject.Close()
 		tearDownFile(f)
 	}()
 	kv := getBenchmarkKeyVals()
@@ -446,7 +446,7 @@ func BenchmarkAsyncLogger_json_withBufferedFileWriter_with1024ChanSize_with4Work
 	f := setUpFile(b.Name())
 	subject := makeAsyncLogger(xlog.NewBufferedWriter(f), 1024, 4)
 	defer func() {
-		subject.Close()
+		_ = subject.Close()
 		tearDownFile(f)
 	}()
 	kv := getBenchmarkKeyVals()
@@ -507,7 +507,7 @@ func BenchmarkAsyncLogger_json_withFileWriter_with256ChanSize_with1Worker_withCo
 	f := setUpFile(b.Name())
 	subject := makeAsyncLogger(f, 256, 1)
 	defer func() {
-		subject.Close()
+		_ = subject.Close()
 		tearDownFile(f)
 	}()
 	kv := getBenchmarkKeyVals()
@@ -533,7 +533,7 @@ func BenchmarkAsyncLogger_json_withFileWriter_with1024ChanSize_with4Workers_with
 	f := setUpFile(b.Name())
 	subject := makeAsyncLogger(f, 1024, 24)
 	defer func() {
-		subject.Close()
+		_ = subject.Close()
 		tearDownFile(f)
 	}()
 	kv := getBenchmarkKeyVals()

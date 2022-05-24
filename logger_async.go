@@ -132,7 +132,7 @@ func (logger *AsyncLogger) Log(keyValues ...interface{}) {
 // You should call it to make sure all logs have been processed
 // (for example at your application shutdown).
 // Once called, any further call to any of the logging methods will be ignored.
-func (logger *AsyncLogger) Close() {
+func (logger *AsyncLogger) Close() error {
 	logger.closeMu.Lock()
 	defer logger.closeMu.Unlock()
 
@@ -145,6 +145,8 @@ func (logger *AsyncLogger) Close() {
 			bw.Stop()
 		}
 	}
+
+	return nil
 }
 
 // isClosed returns true if Close method was called, false otherwise.

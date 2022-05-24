@@ -27,5 +27,6 @@ func TestNopLogger_doesNothing(t *testing.T) {
 	subject.Warn(kv)
 	subject.Error(kv)
 	subject.Critical(kv)
-	subject.Close()
+	err := subject.Close()
+	assertNil(t, err)
 }

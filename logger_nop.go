@@ -32,4 +32,4 @@ func (NopLogger) Debug(...interface{}) {}
 func (NopLogger) Log(...interface{}) {}
 
 // Close nicely closes logger.
-func (NopLogger) Close() {}
+func (NopLogger) Close() error { return nil }

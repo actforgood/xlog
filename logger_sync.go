@@ -79,11 +79,16 @@ func (logger *SyncLogger) Log(keyValues ...interface{}) {
 	logger.log(LevelNone, keyValues...)
 }
 
-// Close nicely closes logger.
-func (logger *SyncLogger) Close() {
+// Close performs clean up actions, closes resources,
+// avoids memory leaks, etc.
+// Make sure to call it at your application shutdown
+// for example.
+func (logger *SyncLogger) Close() error {
 	if bw, ok := logger.writer.(*BufferedWriter); ok {
 		bw.Stop()
 	}
+
+	return nil
 }
 
 // log is used internally to write the log, if eligible.

@@ -14,6 +14,7 @@ type MockLogger struct {
 	logCallsCnt   map[Level]uint32
 	logCallbacks  map[Level]func(keyValues ...interface{})
 	closeCallsCnt uint32
+	closeErr      error
 	mu            sync.RWMutex
 }
 
@@ -57,9 +58,8 @@ func (mock *MockLogger) Log(keyValues ...interface{}) {
 
 func (mock *MockLogger) logByLevel(lvl Level, keyValues ...interface{}) {
 	mock.mu.Lock()
-	defer mock.mu.Unlock()
-
 	mock.logCallsCnt[lvl]++
+	mock.mu.Unlock()
 
 	if mock.logCallbacks[lvl] != nil {
 		mock.logCallbacks[lvl](keyValues...)
@@ -67,11 +67,12 @@ func (mock *MockLogger) logByLevel(lvl Level, keyValues ...interface{}) {
 }
 
 // Close mock logic.
-func (mock *MockLogger) Close() {
+func (mock *MockLogger) Close() error {
 	mock.mu.Lock()
-	defer mock.mu.Unlock()
-
 	mock.closeCallsCnt++
+	mock.mu.Unlock()
+
+	return mock.closeErr
 }
 
 // SetLogCallback sets the callback to be executed inside Error/Warn/Info/Debug/Log.
@@ -81,6 +82,11 @@ func (mock *MockLogger) SetLogCallback(
 	callback func(keyValues ...interface{}),
 ) {
 	mock.logCallbacks[lvl] = callback
+}
+
+// SetCloseError sets the error to be returned by the Close method.
+func (mock *MockLogger) SetCloseError(closeErr error) {
+	mock.closeErr = closeErr
 }
 
 // LogCallsCount returns the no. of times Critical/Error/Warn/Info/Debug/Log was called.
