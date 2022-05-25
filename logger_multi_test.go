@@ -116,6 +116,9 @@ func TestMultiLogger_logsOnEveryLogger(t *testing.T) {
 		subject xlog.Logger = xlog.NewMultiLogger(loggers...)
 		kv                  = getInputKeyValues()
 	)
+	defer func() {
+		assertNil(t, subject.Close())
+	}()
 
 	for _, lvl := range levels {
 		for _, logger := range loggers {

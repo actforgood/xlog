@@ -73,10 +73,10 @@ func (logger *MultiLogger) Log(keyValues ...interface{}) {
 // Make sure to call it at your application shutdown
 // for example.
 func (logger *MultiLogger) Close() error {
-	mErr := xerr.NewMultiError()
+	var mErr *xerr.MultiError
 	for _, lgr := range logger.loggers {
 		if err := lgr.Close(); err != nil {
-			mErr.Add(err)
+			mErr = mErr.Add(err)
 		}
 	}
 
