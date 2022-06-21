@@ -25,7 +25,7 @@ setup: ## Download dependencies.
 
 .PHONY: test
 test: ## Run tests (with race condition detection).
-	go test --race ./...
+	go test -race -timeout=30s ./...
 
 .PHONY: bench
 bench: ## Run benchmarks.
@@ -33,7 +33,7 @@ bench: ## Run benchmarks.
 
 .PHONY: cover
 cover: ## Run tests with coverage. Generates "cover.out" profile and its html representation.
-	go test -race -coverprofile=cover.out -coverpkg=./... ./...
+	go test -race -timeout=30s -coverprofile=cover.out -coverpkg=./... ./...
 	go tool cover -html=cover.out -o cover.html
 
 .PHONY: tidy

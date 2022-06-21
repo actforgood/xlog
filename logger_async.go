@@ -52,7 +52,6 @@ func NewAsyncLogger(w io.Writer, opts ...AsyncLoggerOption) *AsyncLogger {
 		writer:    w,
 		formatter: JSONFormatter,
 		workersNo: 1,
-		opts:      NewCommonOpts(),
 	}
 
 	// apply options, if any.
@@ -60,6 +59,9 @@ func NewAsyncLogger(w io.Writer, opts ...AsyncLoggerOption) *AsyncLogger {
 		opt(logger)
 	}
 
+	if logger.opts == nil {
+		logger.opts = NewCommonOpts()
+	}
 	// if no option was provided for entriesChan, use default.
 	if logger.entriesChan == nil {
 		const defaultEntriesChanSize = 256

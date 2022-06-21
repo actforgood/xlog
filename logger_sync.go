@@ -34,12 +34,14 @@ func NewSyncLogger(w io.Writer, opts ...SyncLoggerOption) *SyncLogger {
 	logger := &SyncLogger{
 		writer:    w,
 		formatter: JSONFormatter,
-		opts:      NewCommonOpts(),
 	}
 
 	// apply functional options, if any.
 	for _, opt := range opts {
 		opt(logger)
+	}
+	if logger.opts == nil {
+		logger.opts = NewCommonOpts()
 	}
 
 	return logger
