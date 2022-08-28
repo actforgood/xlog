@@ -22,7 +22,7 @@ The logs can be formatted in JSON, logfmt, custom text format.
 
 ### Common options
 A logger will need a `CommonOpts` through which you can configure some default keys and values used by the logger.
-```golang
+```go
 xOpts := xlog.NewCommonOpts() // instantiates new CommonOpts object with default values.
 ``` 
 ###### Configuring `level` options for a log.  
@@ -31,7 +31,7 @@ Example of applicability:
 * you may want to log from Error above messages on production env, and all levels on dev env.  
 * you may want to log messages by different level in different sources - see also `ExampleMultiLogger_splitMessagesByLevel` from doc reference.  
 
-```golang
+```go
 xOpts.MinLevel = xlog.FixedLevelProvider(xlog.LevelDebug) // by default is LevelWarning
 xOpts.MaxLevel = xlog.FixedLevelProvider(xlog.LevelInfo) // by default is LevelCritical
 xOpts.LevelKey = "level" // by default is "lvl"
@@ -47,7 +47,7 @@ Check also the `xlog.EnvLevelProvider` - to get the level from OS's env.
 You can make your own `xlog.LevelProvider` - to get the level from a remote API/other source, for example.  
 
 ###### Configuring `time` options for a log.
-```golang
+```go
 xOpts.Time    = xlog.UTCTimeProvider(time.RFC3339) // by default is time.RFC3339Nano
 xOpts.TimeKey = "t" // by default is "date"
 ```
@@ -55,7 +55,7 @@ Check also the `xlog.LocalTimeProvider` - to get time in local server timezone.
 You can make your own `xlog.Provider` if needed for more custom logic.  
 
 ###### Configuring `source` options for a log.
-```golang
+```go
 xOpts.Source = xlog.SourceProvider(4, 2) // by default logs full path with a stack level of 4.
 xOpts.SourceKey = "source" // by default is "src"
 ```
@@ -63,7 +63,7 @@ By setting `SourceKey` to blank, you can disable source logging.
 By changing the first parameter in `SourceProvider`, you can manipulate the level in the stack trace.
 By changing the second parameter in `SourceProvider`, you can manipulate how many levels in the path to be logged.
 Example:
-```golang
+```go
 xlog.SourceProvider(4, 0) // => "src":"/Users/JohnDoe/work/go/xlog/example.go:65" (full path)
 xlog.SourceProvider(4, 1) // => "src":"/example.go:65"
 xlog.SourceProvider(4, 2) // => "src":"/xlog/example.go:65"
@@ -72,7 +72,7 @@ xlog.SourceProvider(4, 3) // => "src":"/go/xlog/example.go:65"
 ```
 
 ###### Configuring additional key-values to be logged with every log.
-```golang
+```go
 xOpts.AdditionalKeyValues = []interface{}{
 	"app", "demoXlog",
 	"env", "prod",
@@ -84,7 +84,7 @@ xOpts.AdditionalKeyValues = []interface{}{
 By design, logger contract does not return error from its methods.
 A no operation `ErrorHandler` is set by default. You can change it to something else
 if suitable. For example, log with standard go logger the error.
-```golang
+```go
 xOpts.ErrHandler = func(err error, keyValues []interface{}) {
 	// import "log"
 	log.Printf("An error occurred during logging. err = %v, logParams = %v", err, keyValues)
@@ -99,7 +99,7 @@ xOpts.ErrHandler = func(err error, keyValues []interface{}) {
 It just calls underlying writer with each log call.  
 Note: if used in a concurrent context, log writes are not concurrent safe, unless the writer is concurrent safe. See also `NewSyncWriter` on this matter.  
 Example of usage:
-```golang
+```go
 xLogger := xlog.NewSyncLogger(os.Stdout)
 defer xLogger.Close()
 xLogger.Error(
@@ -109,7 +109,7 @@ xLogger.Error(
 )
 ```
 You can change the formatter (json is default), and common options like:
-```golang
+```go
 xOpts := xlog.NewCommonOpts()
 xOpts.MinLevel = xlog.FixedLevelProvider(xlog.LevelInfo)
 xLogger := xlog.NewSyncLogger(
@@ -124,7 +124,7 @@ defer xLogger.Close()
 `AsyncLogger` is a `Logger` which writes logs asynchronously.  
 Note: if used in a concurrent context, log writes are concurrent safe if only one worker is configured to process the logs. Otherwise, log writes are not concurrent safe, unless the writer is concurrent safe. See also `NewSyncWriter` and `AsyncLoggerWithWorkersNo` on this matter.  
 Example of usage:
-```golang
+```go
 xLogger := xlog.NewAsyncLogger(os.Stdout)
 defer xLogger.Close()
 xLogger.Error(
@@ -134,7 +134,7 @@ xLogger.Error(
 )
 ```
 You can change some options on it like:
-```golang
+```go
 xOpts := xlog.NewCommonOpts()
 xOpts.MinLevel = xlog.FixedLevelProvider(xlog.LevelInfo)
 xLogger := xlog.NewAsyncLogger(
@@ -164,7 +164,7 @@ Note how in a high concurrency context (*_parallel*) the sync logger actually be
 ##### MultiLogger
 `MultiLogger` is a composite `Logger` capable of logging to multiple loggers.  
 Example of usage:
-```golang
+```go
 xLogger := xlog.NewMultiLogger(loggerA, loggerB)
 defer xLogger.Close()
 xLogger.Error(
@@ -194,7 +194,7 @@ Example of log:
 ##### LogfmtFormatter
 Logs get written in [logfmt](https://brandur.org/logfmt) format.  
 Example of configuring:  
-```golang
+```go
 xLogger := xlog.NewSyncLogger(
 	os.Stdout,
 	xlog.SyncLoggerWithOptions(xOpts),
@@ -211,7 +211,7 @@ date=2022-04-12T16:01:20Z lvl=INFO src=/formatter_logfmt_test.go:42 appName=demo
 Logs get written in custom, human friendly format: *TIME SOURCE LEVEL MESSAGE KEY1=VALUE1 KEY2=VALUE2 ...*  
 Note: this is not a structured logging format. It can be used for a "dev" logger, for example.  
 Example of configuring (see also `ExampleSyncLogger_devLogger` from doc reference):  
-```golang
+```go
 xLogger := xlog.NewSyncLogger(
 	os.Stdout,
 	xlog.SyncLoggerWithOptions(xOpts),
@@ -227,7 +227,7 @@ Example of log:
 ##### SyslogFormatter
 Logs get written to system syslog.
 Example of configuring (see also `ExampleSyncLogger_withSyslog` from doc reference):
-```golang
+```go
 xLogger := xlog.NewSyncLogger(
 	syslogWriter,
 	xlog.SyncLoggerWithFormatter(xlog.SyslogFormatter(
@@ -242,7 +242,7 @@ xLogger := xlog.NewSyncLogger(
 ##### SentryFormatter
 Logs get written to [Sentry](https://docs.sentry.io/).
 Example of configuring (see also `ExampleSyncLogger_withSentry` from doc reference):
-```golang
+```go
 xLogger := xlog.NewSyncLogger(
 	io.Discard, // no need for other writer, SentryFormatter will override it with a buffered one in order to get original Formatter output.
 	xlog.SyncLoggerWithOptions(xOpts),

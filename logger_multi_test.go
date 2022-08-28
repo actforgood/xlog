@@ -7,7 +7,6 @@ package xlog_test
 
 import (
 	"errors"
-	"io/ioutil"
 	"os"
 	"testing"
 
@@ -49,7 +48,7 @@ func ExampleMultiLogger_splitMessagesByLevel() {
 	logger.Error("msg", "I get written to standard error")
 
 	// Output:
-	// {"date":"2022-03-20T16:01:20Z","lvl":"DEBUG","msg":"I get written to standard output","src":"/logger_multi_test.go:48"}
+	// {"date":"2022-03-20T16:01:20Z","lvl":"DEBUG","msg":"I get written to standard output","src":"/logger_multi_test.go:47"}
 }
 
 func ExampleMultiLogger_logToStdOutAndCustomFile() {
@@ -73,7 +72,7 @@ func ExampleMultiLogger_logToStdOutAndCustomFile() {
 		return "2022-03-15T16:01:20Z"
 	}
 	fileLgrOpts.Source = xlog.SourceProvider(5, 1) // keep only filename for output check
-	f, err := ioutil.TempFile("", "x.log-")        // you will have your well known path defined
+	f, err := os.CreateTemp("", "x.log-*")         // you will have your well known path defined
 	if err != nil {
 		panic(err)
 	}
@@ -92,7 +91,7 @@ func ExampleMultiLogger_logToStdOutAndCustomFile() {
 	logger.Debug("msg", "I get written to standard output and to a file")
 
 	// Output:
-	// {"date":"2022-03-15T16:01:20Z","lvl":"DEBUG","msg":"I get written to standard output and to a file","src":"/logger_multi_test.go:92"}
+	// {"date":"2022-03-15T16:01:20Z","lvl":"DEBUG","msg":"I get written to standard output and to a file","src":"/logger_multi_test.go:91"}
 }
 
 func TestMultiLogger_logsOnEveryLogger(t *testing.T) {

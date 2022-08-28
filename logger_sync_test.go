@@ -350,11 +350,9 @@ func BenchmarkSyncLogger_json_withDiscardWriter_parallel(b *testing.B) {
 
 func BenchmarkSyncLogger_json_withFileWriter(b *testing.B) {
 	f := setUpFile(b.Name())
+	defer tearDownFile(f)
 	subject := makeSyncLogger(f)
-	defer func() {
-		_ = subject.Close()
-		tearDownFile(f)
-	}()
+	defer subject.Close()
 	kv := getBenchmarkKeyVals()
 
 	b.ReportAllocs()
@@ -367,11 +365,9 @@ func BenchmarkSyncLogger_json_withFileWriter(b *testing.B) {
 
 func BenchmarkSyncLogger_json_withBufferedFileWriter(b *testing.B) {
 	f := setUpFile(b.Name())
+	defer tearDownFile(f)
 	subject := makeSyncLogger(xlog.NewBufferedWriter(f))
-	defer func() {
-		_ = subject.Close()
-		tearDownFile(f)
-	}()
+	defer subject.Close()
 	kv := getBenchmarkKeyVals()
 
 	b.ReportAllocs()

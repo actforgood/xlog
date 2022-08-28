@@ -393,11 +393,9 @@ func BenchmarkAsyncLogger_json_withDiscardWriter_with256ChanSize_with4Workers(b 
 
 func BenchmarkAsyncLogger_json_withFileWriter_with256ChanSize_with1Worker(b *testing.B) {
 	f := setUpFile(b.Name())
+	defer tearDownFile(f)
 	subject := makeAsyncLogger(f, 256, 1)
-	defer func() {
-		_ = subject.Close()
-		tearDownFile(f)
-	}()
+	defer subject.Close()
 	kv := getBenchmarkKeyVals()
 
 	b.ReportAllocs()
@@ -410,11 +408,9 @@ func BenchmarkAsyncLogger_json_withFileWriter_with256ChanSize_with1Worker(b *tes
 
 func BenchmarkAsyncLogger_json_withBufferedFileWriter_with256ChanSize_with1Worker(b *testing.B) {
 	f := setUpFile(b.Name())
+	defer tearDownFile(f)
 	subject := makeAsyncLogger(xlog.NewBufferedWriter(f), 256, 1)
-	defer func() {
-		_ = subject.Close()
-		tearDownFile(f)
-	}()
+	defer subject.Close()
 	kv := getBenchmarkKeyVals()
 
 	b.ReportAllocs()
@@ -427,11 +423,9 @@ func BenchmarkAsyncLogger_json_withBufferedFileWriter_with256ChanSize_with1Worke
 
 func BenchmarkAsyncLogger_json_withFileWriter_with1024ChanSize_with4Workers(b *testing.B) {
 	f := setUpFile(b.Name())
+	defer tearDownFile(f)
 	subject := makeAsyncLogger(f, 1024, 4)
-	defer func() {
-		_ = subject.Close()
-		tearDownFile(f)
-	}()
+	defer subject.Close()
 	kv := getBenchmarkKeyVals()
 
 	b.ReportAllocs()
@@ -444,11 +438,9 @@ func BenchmarkAsyncLogger_json_withFileWriter_with1024ChanSize_with4Workers(b *t
 
 func BenchmarkAsyncLogger_json_withBufferedFileWriter_with1024ChanSize_with4Workers(b *testing.B) {
 	f := setUpFile(b.Name())
+	defer tearDownFile(f)
 	subject := makeAsyncLogger(xlog.NewBufferedWriter(f), 1024, 4)
-	defer func() {
-		_ = subject.Close()
-		tearDownFile(f)
-	}()
+	defer subject.Close()
 	kv := getBenchmarkKeyVals()
 
 	b.ReportAllocs()
@@ -505,11 +497,9 @@ func BenchmarkAsyncLogger_json_withDiscardWriter_with1024ChanSize_with4Workers_w
 
 func BenchmarkAsyncLogger_json_withFileWriter_with256ChanSize_with1Worker_withConcurrency10(b *testing.B) {
 	f := setUpFile(b.Name())
+	defer tearDownFile(f)
 	subject := makeAsyncLogger(f, 256, 1)
-	defer func() {
-		_ = subject.Close()
-		tearDownFile(f)
-	}()
+	defer subject.Close()
 	kv := getBenchmarkKeyVals()
 	var wg sync.WaitGroup
 	goroutinesNo := 10
@@ -531,11 +521,9 @@ func BenchmarkAsyncLogger_json_withFileWriter_with256ChanSize_with1Worker_withCo
 
 func BenchmarkAsyncLogger_json_withFileWriter_with1024ChanSize_with4Workers_withConcurrency100(b *testing.B) {
 	f := setUpFile(b.Name())
+	defer tearDownFile(f)
 	subject := makeAsyncLogger(f, 1024, 24)
-	defer func() {
-		_ = subject.Close()
-		tearDownFile(f)
-	}()
+	defer subject.Close()
 	kv := getBenchmarkKeyVals()
 	var wg sync.WaitGroup
 	goroutinesNo := 100

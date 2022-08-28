@@ -6,7 +6,6 @@
 package xlog_test
 
 import (
-	"io/ioutil"
 	"os"
 
 	"github.com/actforgood/xlog"
@@ -73,7 +72,8 @@ func getAdditionalKeyValues() []interface{} {
 
 // setUpFile creates a new file for writing logs in it on the disk.
 func setUpFile(testName string) *os.File {
-	f, err := ioutil.TempFile("", testName+".log-")
+	filePattern := testName + ".log-*"
+	f, err := os.CreateTemp("", filePattern)
 	if err != nil {
 		panic(err)
 	}
