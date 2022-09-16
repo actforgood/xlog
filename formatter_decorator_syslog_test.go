@@ -1,10 +1,10 @@
 //go:build !windows && !nacl && !plan9
 // +build !windows,!nacl,!plan9
 
-// Copyright 2022 Bogdan Constantinescu.
+// Copyright The ActForGood Authors.
 // Use of this source code is governed by an MIT-style
 // license that can be found in the LICENSE file or at
-// https://github.com/actforgood/xlog/LICENSE.
+// https://github.com/actforgood/xlog/blob/main/LICENSE.
 
 package xlog_test
 

@@ -11,6 +11,13 @@ Package `xlog` provides a structured leveled Logger implemented in two different
 The logs can be formatted in JSON, logfmt, custom text format.  
 
 
+### Installation
+
+```shell
+$ go get -u github.com/actforgood/xlog
+```
+
+
 ### Supported level APIs:
 * Critical
 * Error
