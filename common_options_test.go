@@ -716,20 +716,15 @@ func TestEnvLevelProvider(t *testing.T) {
 }
 
 func testEnvLevelProviderWithValidEnv(t *testing.T) {
-	t.Parallel()
-
 	// arrange
 	var (
 		subject     = xlog.EnvLevelProvider
 		lvl         = xlog.LevelDebug
 		defaultLvl  = xlog.LevelInfo
-		envName     = setUpLevelEnv("DEBUG")
+		envName     = getRandLevelEnv()
 		levelLabels = map[xlog.Level]string{lvl: "DEBUG", xlog.LevelWarning: "WARN"}
 	)
-	if envName == "" {
-		t.Fatal("could not setup level env")
-	}
-	defer tearDownLevelEnv(envName)
+	t.Setenv(envName, "DEBUG")
 
 	// act
 	result1 := subject(envName, defaultLvl, levelLabels)()
@@ -756,19 +751,14 @@ func testEnvLevelProviderWithValidEnv(t *testing.T) {
 }
 
 func testEnvLevelProviderWithInvalidEnv(t *testing.T) {
-	t.Parallel()
-
 	// arrange
 	var (
 		subject     = xlog.EnvLevelProvider
 		defaultLvl  = xlog.LevelInfo
-		envName     = setUpLevelEnv("unknown")
+		envName     = getRandLevelEnv()
 		levelLabels = map[xlog.Level]string{xlog.LevelWarning: "WARN"}
 	)
-	if envName == "" {
-		t.Fatal("could not setup level env")
-	}
-	defer tearDownLevelEnv(envName)
+	t.Setenv(envName, "unknown")
 
 	// act
 	result := subject(envName, defaultLvl, levelLabels)()
@@ -946,29 +936,16 @@ func checkTime(t *testing.T, date interface{}, before, after time.Time, format s
 	}
 }
 
-// setUpLevelEnv sets OS env with provided level.
-// Returns the env name.
-// Can be empty if op did not succeed.
-func setUpLevelEnv(lvlLabel string) string {
+// getRandLevelEnv returns a random environment variable name
+// for level. It has the format TEST_XLOG_LEVEL_ENV_<randomNumber>.
+func getRandLevelEnv() string {
 	nBig, err := rand.Int(rand.Reader, big.NewInt(9999999))
 	if err != nil {
 		return ""
 	}
 	randInt := nBig.Int64()
-	envName := "TEST_LOG_LEVEL_ENV_" + strconv.FormatInt(randInt, 10)
-	if _, found := os.LookupEnv(envName); found {
-		return ""
-	}
-	if err := os.Setenv(envName, lvlLabel); err != nil {
-		return ""
-	}
 
-	return envName
-}
-
-// tearDownLevelEnv unsets the OS env provided.
-func tearDownLevelEnv(envName string) {
-	_ = os.Unsetenv(envName)
+	return "TEST_XLOG_LEVEL_ENV_" + strconv.FormatInt(randInt, 10)
 }
 
 func BenchmarkCommonOpts_WithDefaultKeyValues(b *testing.B) {
