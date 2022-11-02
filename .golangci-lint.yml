@@ -19,6 +19,12 @@ linters:
     - nlreturn
     - noctx
     - whitespace
+    - lll
 
 issues:
   exclude-use-default: false
+  exclude-rules:
+    # Exclude some linters from running on tests files.
+    - path: _test\.go
+      linters:
+        - lll
