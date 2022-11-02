@@ -51,7 +51,7 @@ func AsyncLoggerWithFormatter(formatter Formatter) AsyncLoggerOption {
 }
 
 // AsyncLoggerWithOptions sets the common options.
-// A NewCommonOpts is used by default.
+// A [NewCommonOpts] is used by default.
 func AsyncLoggerWithOptions(opts *CommonOpts) AsyncLoggerOption {
 	return func(logger *AsyncLogger) {
 		logger.opts = opts

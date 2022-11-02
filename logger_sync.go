@@ -12,21 +12,21 @@ import (
 // SyncLogger is a Logger which writes logs synchronously.
 // It just calls underlying writer with each log call.
 // Note: if used in a concurrent context, log writes are not concurrent safe,
-// unless the writer is concurrent safe. See also NewSyncWriter on this matter.
+// unless the writer is concurrent safe. See also [NewSyncWriter] on this matter.
 type SyncLogger struct {
 	// writer logs will be written to.
 	writer io.Writer
-	// formatter can be set with SyncLoggerWithFormatter functional option.
+	// formatter can be set with [SyncLoggerWithFormatter] functional option.
 	formatter Formatter
 	// common options for this logger.
-	// can be set with SyncLoggerWithOptions functional option.
+	// can be set with [SyncLoggerWithOptions] functional option.
 	opts *CommonOpts
 }
 
 // NewSyncLogger instantiates a new logger object that writes logs
 // synchronously.
 // First param is a Writer where logs are written to.
-// Example: os.Stdout, a custom opened os.File, an in memory strings.Buffer, etc.
+// Example: [os.Stdout], a custom opened [os.File], an in memory [strings.Buffer], etc.
 // Second param is/are function option(s) through which you can customize
 // the logger. Check for SyncLoggerWith* options.
 func NewSyncLogger(w io.Writer, opts ...SyncLoggerOption) *SyncLogger {

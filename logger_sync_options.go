@@ -18,7 +18,7 @@ func SyncLoggerWithFormatter(formatter Formatter) SyncLoggerOption {
 }
 
 // SyncLoggerWithOptions sets the common options.
-// A NewCommonOpts is used by default.
+// A [NewCommonOpts] is used by default.
 func SyncLoggerWithOptions(opts *CommonOpts) SyncLoggerOption {
 	return func(logger *SyncLogger) {
 		logger.opts = opts

@@ -13,8 +13,8 @@ import (
 // AsyncLogger is a Logger which writes logs asynchronously.
 // Note: if used in a concurrent context, log writes are concurrent safe if only
 // one worker is configured to process the logs. Otherwise, log writes are not
-// concurrent safe, unless the writer is concurrent safe. See also NewSyncWriter
-// and AsyncLoggerWithWorkersNo on this matter.
+// concurrent safe, unless the writer is concurrent safe. See also [NewSyncWriter]
+// and [AsyncLoggerWithWorkersNo] on this matter.
 type AsyncLogger struct {
 	// writer logs will be written to.
 	writer io.Writer
@@ -22,12 +22,12 @@ type AsyncLogger struct {
 	formatter Formatter
 	// internal channel where logs are pushed for processing.
 	// its buffer size is 256 by default.
-	// can be set with AsyncLoggerWithChannelSize functional option.
+	// can be set with [AsyncLoggerWithChannelSize] functional option.
 	entriesChan chan []interface{}
 	// no of workers to start for processing entriesChan.
 	workersNo int
 	// common options for this logger.
-	// can be set with AsyncLoggerWithOptions functional option.
+	// can be set with [AsyncLoggerWithOptions] functional option.
 	opts *CommonOpts
 	// closed flag, true means Close() has been called, from this point forward,
 	// entriesChan is waited to be drained, and no further logs are accepted for
@@ -162,9 +162,9 @@ func (logger *AsyncLogger) isClosed() bool {
 // pushLog sends log entry to internal logs channel.
 // Note: this call blocks if internal logs channel is full
 // (the rate of producing messages is much higher than consuming one).
-// Using AsyncLoggerWithChannelSize to set a higher value to increase
+// Using [AsyncLoggerWithChannelSize] to set a higher value to increase
 // throughput in such case can be helpful. Also setting more workers can
-// be helpful, see AsyncLoggerWithWorkersNo.
+// be helpful, see [AsyncLoggerWithWorkersNo].
 func (logger *AsyncLogger) pushLog(lvl Level, keyValues ...interface{}) {
 	// ignore log conditions check.
 	if !logger.opts.BetweenMinMax(lvl) {

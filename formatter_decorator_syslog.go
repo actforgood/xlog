@@ -99,10 +99,10 @@ func NewExtractFromKeySyslogLevelProvider(
 
 // SyslogFormatter is a decorator which writes another formatter 's output to system syslog.
 // The second param is a function that knows to return a syslog level for the current log.
-// You can use NewDefaultSyslogLevelProvider/NewExtractFromKeySyslogLevelProvider or custom provider
+// You can use [NewDefaultSyslogLevelProvider] / [NewExtractFromKeySyslogLevelProvider] or custom provider
 // (maybe you want to support other syslog levels - for example nothing stops you from doing this:
-// logger.Log("lvl","NOTICE", ...) and map also "NOTICE" to syslog.LOG_NOTICE).
-// The third param is a prefix to be written with each log. You'll pass here empty string or SyslogPrefixCee.
+// logger.Log("lvl","NOTICE", ...) and map also "NOTICE" to [syslog.LOG_NOTICE]).
+// The third param is a prefix to be written with each log. You'll pass here empty string or [SyslogPrefixCee].
 var SyslogFormatter = func(
 	formatter Formatter,
 	syslogLevelProvider SyslogLevelProvider,

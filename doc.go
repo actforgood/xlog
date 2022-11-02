@@ -6,4 +6,4 @@
 // Package xlog provides a structured Logger implemented
 // in two different strategies: synchronous and asynchronous.
 // The logs can be formatted in JSON, logfmt, custom text format.
-package xlog
+package xlog // import "github.com/actforgood/xlog"
