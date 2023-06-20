@@ -708,8 +708,6 @@ func TestFixedLevelProvider(t *testing.T) {
 }
 
 func TestEnvLevelProvider(t *testing.T) {
-	t.Parallel()
-
 	t.Run("valid env", testEnvLevelProviderWithValidEnv)
 	t.Run("invalid env", testEnvLevelProviderWithInvalidEnv)
 	t.Run("not found env", testEnvLevelProviderWithNotFoundEnv)
@@ -768,8 +766,6 @@ func testEnvLevelProviderWithInvalidEnv(t *testing.T) {
 }
 
 func testEnvLevelProviderWithNotFoundEnv(t *testing.T) {
-	t.Parallel()
-
 	// arrange
 	var (
 		subject     = xlog.EnvLevelProvider
