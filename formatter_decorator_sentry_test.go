@@ -26,7 +26,7 @@ func ExampleSyncLogger_withSentry() {
 	err := sentry.Init(sentry.ClientOptions{
 		Dsn:         "https://examplePublicKey@o0.ingest.sentry.io/0",
 		Environment: "dev",
-		Release:     "demo@1.0.0",
+		Release:     "v1.4.0",
 	})
 	if err != nil {
 		panic(err)
