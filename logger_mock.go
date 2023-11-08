@@ -12,7 +12,7 @@ import (
 // MockLogger is a mock for xlog.Logger contract, to be used in UT.
 type MockLogger struct {
 	logCallsCnt   map[Level]uint32
-	logCallbacks  map[Level]func(keyValues ...interface{})
+	logCallbacks  map[Level]func(keyValues ...any)
 	closeCallsCnt uint32
 	closeErr      error
 	mu            sync.RWMutex
@@ -22,41 +22,41 @@ type MockLogger struct {
 func NewMockLogger() *MockLogger {
 	return &MockLogger{
 		logCallsCnt:  make(map[Level]uint32, 5),
-		logCallbacks: make(map[Level]func(keyValues ...interface{}), 5),
+		logCallbacks: make(map[Level]func(keyValues ...any), 5),
 	}
 }
 
 // Critical mock logic.
-func (mock *MockLogger) Critical(keyValues ...interface{}) {
+func (mock *MockLogger) Critical(keyValues ...any) {
 	mock.logByLevel(LevelCritical, keyValues...)
 }
 
 // Error mock logic.
-func (mock *MockLogger) Error(keyValues ...interface{}) {
+func (mock *MockLogger) Error(keyValues ...any) {
 	mock.logByLevel(LevelError, keyValues...)
 }
 
 // Warn mock logic.
-func (mock *MockLogger) Warn(keyValues ...interface{}) {
+func (mock *MockLogger) Warn(keyValues ...any) {
 	mock.logByLevel(LevelWarning, keyValues...)
 }
 
 // Info mock logic.
-func (mock *MockLogger) Info(keyValues ...interface{}) {
+func (mock *MockLogger) Info(keyValues ...any) {
 	mock.logByLevel(LevelInfo, keyValues...)
 }
 
 // Debug mock logic.
-func (mock *MockLogger) Debug(keyValues ...interface{}) {
+func (mock *MockLogger) Debug(keyValues ...any) {
 	mock.logByLevel(LevelDebug, keyValues...)
 }
 
 // Log mock logic.
-func (mock *MockLogger) Log(keyValues ...interface{}) {
+func (mock *MockLogger) Log(keyValues ...any) {
 	mock.logByLevel(LevelNone, keyValues...)
 }
 
-func (mock *MockLogger) logByLevel(lvl Level, keyValues ...interface{}) {
+func (mock *MockLogger) logByLevel(lvl Level, keyValues ...any) {
 	mock.mu.Lock()
 	mock.logCallsCnt[lvl]++
 	mock.mu.Unlock()
@@ -79,7 +79,7 @@ func (mock *MockLogger) Close() error {
 // You can make assertions upon passed parameter(s) this way.
 func (mock *MockLogger) SetLogCallback(
 	lvl Level,
-	callback func(keyValues ...interface{}),
+	callback func(keyValues ...any),
 ) {
 	mock.logCallbacks[lvl] = callback
 }

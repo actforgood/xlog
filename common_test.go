@@ -17,7 +17,7 @@ import (
 const staticTime = "2021-11-30T16:01:20Z"
 
 // staticTimeProvider returns a static time for logs.
-var staticTimeProvider = func() interface{} {
+var staticTimeProvider = func() any {
 	return staticTime
 }
 
@@ -40,11 +40,11 @@ func callMethodByLevel(subject xlog.Logger, lvl xlog.Level) {
 }
 
 // getExpectedKeyValues returns final key values to be logged.
-func getExpectedKeyValues(lvl xlog.Level, labels map[xlog.Level]string) []interface{} {
+func getExpectedKeyValues(lvl xlog.Level, labels map[xlog.Level]string) []any {
 	inputKeyValues := getInputKeyValues()
 	additionalKeyValues := getAdditionalKeyValues()
 
-	expectedKeyValues := make([]interface{}, 0, 6+len(inputKeyValues)+len(additionalKeyValues))
+	expectedKeyValues := make([]any, 0, 6+len(inputKeyValues)+len(additionalKeyValues))
 	expectedKeyValues = append(expectedKeyValues, "date", staticTime)
 	if lvl != xlog.LevelNone {
 		expectedKeyValues = append(expectedKeyValues, "lvl", labels[lvl])
@@ -56,16 +56,16 @@ func getExpectedKeyValues(lvl xlog.Level, labels map[xlog.Level]string) []interf
 }
 
 // getInputKeyValues returns input test data to be logged.
-func getInputKeyValues() []interface{} {
-	return []interface{}{
+func getInputKeyValues() []any {
+	return []any{
 		"foo", "bar",
 		"no", 10,
 	}
 }
 
 // getAdditionalKeyValues returns additional key values to be logged.
-func getAdditionalKeyValues() []interface{} {
-	return []interface{}{
+func getAdditionalKeyValues() []any {
+	return []any{
 		"extraKey", "extraValue",
 	}
 }
@@ -88,10 +88,10 @@ func tearDownFile(f *os.File) {
 }
 
 // getBenchmarkKeyVals returns some key vals used in benchmark tests.
-func getBenchmarkKeyVals() []interface{} {
+func getBenchmarkKeyVals() []any {
 	dummy := dummyStringer{Name: "John"}
 
-	return []interface{}{"test", 123, "aaa", "bbb", "dummy", dummy}
+	return []any{"test", 123, "aaa", "bbb", "dummy", dummy}
 }
 
 // dummyStringer is dummy Stringer used in tests.

@@ -25,7 +25,7 @@ func (enc *logfmtEncoder) Reset() {
 }
 
 // Encode encodes given key values in logfmt format.
-func (enc *logfmtEncoder) Encode(keyValues ...interface{}) error {
+func (enc *logfmtEncoder) Encode(keyValues ...any) error {
 	if err := enc.EncodeKeyvals(keyValues...); err != nil {
 		return err
 	}
@@ -34,7 +34,7 @@ func (enc *logfmtEncoder) Encode(keyValues ...interface{}) error {
 }
 
 var logfmtEncoderPool = sync.Pool{
-	New: func() interface{} {
+	New: func() any {
 		enc := new(logfmtEncoder)
 		enc.Encoder = logfmt.NewEncoder(&enc.buf)
 
@@ -46,7 +46,7 @@ var logfmtEncoderPool = sync.Pool{
 // resulted bytes to the writer.
 // It returns error if a serialization/writing problem is encountered.
 // More about logfmt can be found here: https://brandur.org/logfmt .
-var LogfmtFormatter Formatter = func(w io.Writer, keyValues []interface{}) error {
+var LogfmtFormatter Formatter = func(w io.Writer, keyValues []any) error {
 	keyValues = AppendNoValue(keyValues)
 
 	enc := logfmtEncoderPool.Get().(*logfmtEncoder)

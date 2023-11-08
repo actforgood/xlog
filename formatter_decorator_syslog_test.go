@@ -65,7 +65,7 @@ func ExampleSyncLogger_withSyslogSupportingAllSyslogLevels() {
 
 	opts := xlog.NewCommonOpts()
 	opts.MinLevel = xlog.FixedLevelProvider(xlog.LevelNone) // need LevelNone to be able to use Log().
-	allSyslogLevelsMap := map[interface{}]syslog.Priority{  // we define all levels map.
+	allSyslogLevelsMap := map[any]syslog.Priority{          // we define all levels map.
 		// default xlog levels/labels
 		"CRITICAL": syslog.LOG_CRIT,
 		"ERROR":    syslog.LOG_ERR,
@@ -108,7 +108,7 @@ func TestSyslogFormatter_successfullyWritesKeyValuesByLevel(t *testing.T) {
 		commOpts    = xlog.NewCommonOpts()
 		formatter   = new(MockFormatter)
 		writer      = NewMockSyslogWriter()
-		levelLabels = map[interface{}]syslog.Priority{
+		levelLabels = map[any]syslog.Priority{
 			"DEBUG":    syslog.LOG_DEBUG,
 			"INFO":     syslog.LOG_INFO,
 			"NOTICE":   syslog.LOG_NOTICE,
@@ -133,8 +133,8 @@ func TestSyslogFormatter_successfullyWritesKeyValuesByLevel(t *testing.T) {
 		testLabel := levelLabel.(string)
 		idx++
 		t.Run(fmt.Sprintf("level_%s", testLabel), func(t *testing.T) {
-			keyValues := []interface{}{"abc", "123", commOpts.LevelKey, testLabel}
-			formatter.SetFormatCallback(func(w io.Writer, kv []interface{}) error {
+			keyValues := []any{"abc", "123", commOpts.LevelKey, testLabel}
+			formatter.SetFormatCallback(func(w io.Writer, kv []any) error {
 				assertEqual(t, keyValues, kv)
 				buf, ok := w.(*bytes.Buffer)
 				if assertTrue(t, ok) {
@@ -173,9 +173,9 @@ func TestSyslogFormatter_successfullyWritesKeyValuesNoLevel(t *testing.T) {
 			xlog.NewDefaultSyslogLevelProvider(commOpts),
 			"",
 		)
-		keyValues = []interface{}{"abc", "123", "no", "level"}
+		keyValues = []any{"abc", "123", "no", "level"}
 	)
-	formatter.SetFormatCallback(func(w io.Writer, kv []interface{}) error {
+	formatter.SetFormatCallback(func(w io.Writer, kv []any) error {
 		assertEqual(t, keyValues, kv)
 		buf, ok := w.(*bytes.Buffer)
 		if assertTrue(t, ok) {
@@ -212,7 +212,7 @@ func TestSyslogFormatter_returnsErrFromFormatter(t *testing.T) {
 			xlog.NewDefaultSyslogLevelProvider(commOpts),
 			"",
 		)
-		keyValues = []interface{}{"foo", "bar", "year", 2022}
+		keyValues = []any{"foo", "bar", "year", 2022}
 	)
 	formatter.SetFormatCallback(FormatCallbackErr)
 
@@ -238,7 +238,7 @@ func TestSyslogFormatter_returnsErrNotSyslogWriter(t *testing.T) {
 			xlog.NewDefaultSyslogLevelProvider(commOpts),
 			"",
 		)
-		keyValues = []interface{}{"foo", "bar", "year", 2022}
+		keyValues = []any{"foo", "bar", "year", 2022}
 	)
 
 	// act
@@ -267,7 +267,7 @@ func TestSyslogFormatter_concurrency(t *testing.T) {
 		sum          int64
 	)
 	writer.SetWriteCallback(func(p []byte) (n int, err error) {
-		var logData map[string]interface{}
+		var logData map[string]any
 		if err := json.Unmarshal(p, &logData); err != nil {
 			t.Error(err.Error())
 

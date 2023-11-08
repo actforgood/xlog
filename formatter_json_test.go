@@ -23,7 +23,7 @@ func TestJSONFormatter_successfullyWritesJSON(t *testing.T) {
 		subject   = xlog.JSONFormatter
 		dummy     = dummyStringer{Name: "John Doe"}
 		someErr   = errors.New("test err.Error() is serialized")
-		keyValues = []interface{}{
+		keyValues = []any{
 			"foo", "bar",
 			"age", 34,
 			"computation", 123.456,
@@ -42,7 +42,7 @@ func TestJSONFormatter_successfullyWritesJSON(t *testing.T) {
 	// assert
 	assertNil(t, resultErr)
 	writtenBytes := writer.Bytes()
-	var kvMap map[string]interface{}
+	var kvMap map[string]any
 	if err := json.Unmarshal(writtenBytes, &kvMap); err != nil {
 		t.Fatal(err.Error())
 	}
@@ -51,10 +51,10 @@ func TestJSONFormatter_successfullyWritesJSON(t *testing.T) {
 	assertEqual(t, 34, int(kvMap["age"].(float64)))
 	assertEqual(t, 123.456, kvMap["computation"])
 	assertEqual(t, "ten", kvMap["10"])
-	assertEqual(t, 3, len(kvMap["ints-slice"].([]interface{})))
+	assertEqual(t, 3, len(kvMap["ints-slice"].([]any)))
 	assertEqual(
 		t,
-		map[string]interface{}{"Name": "John Doe"},
+		map[string]any{"Name": "John Doe"},
 		kvMap["dummyStringer: John Doe"],
 	)
 	assertEqual(t, someErr.Error(), kvMap["err"])
@@ -67,7 +67,7 @@ func TestJSONFormatter_returnsWriteErr(t *testing.T) {
 	var (
 		subject   = xlog.JSONFormatter
 		dummy     = dummyStringer{Name: "John Doe"}
-		keyValues = []interface{}{
+		keyValues = []any{
 			"foo", "bar",
 			"age", 34,
 			"computation", 123.456,
@@ -92,7 +92,7 @@ func BenchmarkJSONFormatter(b *testing.B) {
 	var (
 		subject = xlog.JSONFormatter
 		dummy   = dummyStringer{Name: "John Doe"}
-		input   = []interface{}{
+		input   = []any{
 			"foo", "bar",
 			"age", 34,
 			"computation", 123.456,

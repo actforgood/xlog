@@ -466,9 +466,9 @@ func testCommonOptsDefaultKeyValuesTimeLevelSourceAdditionalKeyValues(t *testing
 		subject       = xlog.NewCommonOpts()
 		before, after time.Time
 	)
-	subject.AdditionalKeyValues = []interface{}{
+	subject.AdditionalKeyValues = []any{
 		"foo", "bar",
-		"provider-key", xlog.Provider(func() interface{} {
+		"provider-key", xlog.Provider(func() any {
 			return "provider-value"
 		}),
 	}
@@ -628,7 +628,7 @@ func testCommonOptsDefaultKeyValuesWithCustom(t *testing.T) {
 	var (
 		subject       = xlog.NewCommonOpts()
 		before, after time.Time
-		keyValues     = []interface{}{"a", "b", "one", 1}
+		keyValues     = []any{"a", "b", "one", 1}
 	)
 
 	// act
@@ -868,15 +868,15 @@ func TestAppendNoValue(t *testing.T) {
 	// arrange
 	var (
 		subject       = xlog.AppendNoValue
-		oddKeyValues  = []interface{}{"key"}
-		evenKeyValues = []interface{}{"key", "value"}
+		oddKeyValues  = []any{"key"}
+		evenKeyValues = []any{"key", "value"}
 	)
 
 	// act
 	result := subject(oddKeyValues)
 
 	// assert
-	assertEqual(t, []interface{}{"key", "*NoValue*"}, result)
+	assertEqual(t, []any{"key", "*NoValue*"}, result)
 
 	// act
 	result2 := subject(evenKeyValues)
@@ -920,7 +920,7 @@ func (dummyEnrichedErr) Format(s fmt.State, verb rune) {
 }
 
 // checkTime is used internally to test a Time result.
-func checkTime(t *testing.T, date interface{}, before, after time.Time, format string) {
+func checkTime(t *testing.T, date any, before, after time.Time, format string) {
 	t.Helper()
 	dateStr, isString := date.(string)
 	if assertTrue(t, isString) {
@@ -946,9 +946,9 @@ func getRandLevelEnv() string {
 
 func BenchmarkCommonOpts_WithDefaultKeyValues(b *testing.B) {
 	subject := xlog.NewCommonOpts()
-	subject.AdditionalKeyValues = []interface{}{
+	subject.AdditionalKeyValues = []any{
 		"foo", "bar",
-		"provider-key", xlog.Provider(func() interface{} {
+		"provider-key", xlog.Provider(func() any {
 			return "provider-value"
 		}),
 		"some-int", 567,

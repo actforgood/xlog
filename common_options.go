@@ -76,7 +76,7 @@ type CommonOpts struct {
 	// Example: you may want to log your application version or name or
 	// environment (dev/stage/production/...), etc.
 	// The value can be a Provider for dynamically retrieve a value at runtime.
-	AdditionalKeyValues []interface{}
+	AdditionalKeyValues []any
 
 	// ErrHandler callback to process errors that occurred during logging.
 	// By design, the logger contract does not return errors from its methods
@@ -94,16 +94,16 @@ type CommonOpts struct {
 type LevelProvider func() Level
 
 // Provider is a function that returns at runtime a value.
-type Provider func() interface{}
+type Provider func() any
 
 // ErrorHandler is a callback to handle internal logging errors.
 // It accepts as 1st param the internal logging error.
 // It accepts as 2nd param the key-values log entry on which error occurred.
-type ErrorHandler func(err error, keyValues []interface{})
+type ErrorHandler func(err error, keyValues []any)
 
 // NopErrorHandler is "no-op" error handler for any error occurred
 // during log process. It simply ignores the error.
-var NopErrorHandler ErrorHandler = func(_ error, _ []interface{}) {}
+var NopErrorHandler ErrorHandler = func(_ error, _ []any) {}
 
 // NewCommonOpts instantiates a default configured CommonOpts object.
 // You can start customization of fields from this object.
@@ -134,8 +134,8 @@ func (opts *CommonOpts) BetweenMinMax(lvl Level) bool {
 }
 
 // WithDefaultKeyValues returns keyValues enriched with default ones.
-func (opts *CommonOpts) WithDefaultKeyValues(lvl Level, keyValues ...interface{}) []interface{} {
-	keyVals := make([]interface{}, 0, 6+len(opts.AdditionalKeyValues)+len(keyValues))
+func (opts *CommonOpts) WithDefaultKeyValues(lvl Level, keyValues ...any) []any {
+	keyVals := make([]any, 0, 6+len(opts.AdditionalKeyValues)+len(keyValues))
 	keyValues = AppendNoValue(keyValues)
 	keyVals = append(keyVals, opts.TimeKey, opts.Time())
 	if lvl != LevelNone {
@@ -190,14 +190,14 @@ func EnvLevelProvider(envLvlKey string, defaultLvl Level, levelLabels map[Level]
 
 // UTCTimeProvider is a formatted current UTC time provider.
 func UTCTimeProvider(format string) Provider {
-	return func() interface{} {
+	return func() any {
 		return time.Now().UTC().Format(format)
 	}
 }
 
 // LocalTimeProvider is a formatted current local time provider.
 func LocalTimeProvider(format string) Provider {
-	return func() interface{} {
+	return func() any {
 		return time.Now().Format(format)
 	}
 }
@@ -207,7 +207,7 @@ func LocalTimeProvider(format string) Provider {
 // Second param is number of directories to skip from file name
 // backwards to root dir (0 means full path is returned).
 func SourceProvider(skipFrames, skipPath int) Provider {
-	return func() interface{} {
+	return func() any {
 		_, file, line, ok := runtime.Caller(skipFrames)
 		if ok {
 			idx := 0
@@ -229,7 +229,7 @@ func SourceProvider(skipFrames, skipPath int) Provider {
 
 // AppendNoValue is a safety function which adds a "*NoValue*"
 // at the end of keyValues slice in case it is odd.
-func AppendNoValue(keyValues []interface{}) []interface{} {
+func AppendNoValue(keyValues []any) []any {
 	if len(keyValues)%2 == 1 {
 		keyValues = append(keyValues, noValue)
 	}

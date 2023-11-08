@@ -15,13 +15,13 @@ import (
 // It can be used for example for local dev environment.
 // Example of output: "TIME SOURCE LEVEL MESSAGE KEY1=VALUE1 KEY2=VALUE2 ...".
 var TextFormatter = func(opts *CommonOpts) Formatter {
-	return func(w io.Writer, keyValues []interface{}) error {
+	return func(w io.Writer, keyValues []any) error {
 		keyValues = AppendNoValue(keyValues)
 
 		var (
 			time, level, source, msg  string
 			finalOutBuf, extraInfoBuf bytes.Buffer
-			key, value                interface{}
+			key, value                any
 		)
 		finalOutBuf.Grow(64)
 		extraInfoBuf.Grow(64)

@@ -13,11 +13,11 @@ import (
 // JSONFormatter serializes key-values in JSON format and writes the
 // resulted JSON to the writer.
 // It returns error if a serialization/writing problem is encountered.
-var JSONFormatter Formatter = func(w io.Writer, keyValues []interface{}) error {
+var JSONFormatter Formatter = func(w io.Writer, keyValues []any) error {
 	keyValues = AppendNoValue(keyValues)
 
 	// convert log slice into a map.
-	keyValueMap := make(map[string]interface{}, len(keyValues)/2)
+	keyValueMap := make(map[string]any, len(keyValues)/2)
 	for idx := 0; idx < len(keyValues); idx += 2 {
 		keyValueMap[stringify(keyValues[idx])] = valueForJSON(keyValues[idx+1])
 	}
@@ -31,7 +31,7 @@ var JSONFormatter Formatter = func(w io.Writer, keyValues []interface{}) error {
 
 // valueForJSON applies some customization upon a value.
 // Currently an error.Error() is taken instead of error itself.
-func valueForJSON(v interface{}) interface{} {
+func valueForJSON(v any) any {
 	switch val := v.(type) { // nolint
 	case error:
 		if val != nil {

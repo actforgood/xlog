@@ -24,11 +24,11 @@ func ExampleAsyncLogger() {
 
 	opts := xlog.NewCommonOpts()
 	opts.MinLevel = xlog.FixedLevelProvider(xlog.LevelNone)
-	opts.AdditionalKeyValues = []interface{}{
+	opts.AdditionalKeyValues = []any{
 		"appName", "demo",
 		"env", "dev",
 	}
-	opts.Time = func() interface{} { // mock time for output check
+	opts.Time = func() any { // mock time for output check
 		return "2022-03-16T16:01:20Z"
 	}
 	opts.Source = xlog.SourceProvider(4, 1) // keep only filename for output check
@@ -133,7 +133,7 @@ func testAsyncLoggerLogSuccessful(testLvl xlog.Level) func(t *testing.T) {
 		commOpts.SourceKey = ""
 		commOpts.Time = staticTimeProvider
 
-		formatter.SetFormatCallback(func(w io.Writer, kv []interface{}) error {
+		formatter.SetFormatCallback(func(w io.Writer, kv []any) error {
 			assertEqual(t, getExpectedKeyValues(testLvl, commOpts.LevelLabels), kv)
 			assertEqual(t, writer, w)
 
@@ -209,7 +209,7 @@ func testAsyncLoggerLogFormatErr(testLvl xlog.Level) func(t *testing.T) {
 		commOpts.SourceKey = ""
 		commOpts.Time = staticTimeProvider
 		formatter.SetFormatCallback(FormatCallbackErr)
-		errHandler.SetHandleCallback(func(err error, keyVals []interface{}) {
+		errHandler.SetHandleCallback(func(err error, keyVals []any) {
 			assertTrue(t, errors.Is(err, ErrFormat))
 			assertEqual(t, getExpectedKeyValues(testLvl, commOpts.LevelLabels), keyVals)
 		})
@@ -328,7 +328,7 @@ func TestAsyncLogger_concurrency(t *testing.T) {
 				}
 				linesCount++
 
-				var logData map[string]interface{}
+				var logData map[string]any
 				if err := json.Unmarshal(line, &logData); err != nil {
 					t.Error(err.Error())
 

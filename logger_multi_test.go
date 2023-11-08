@@ -20,7 +20,7 @@ func ExampleMultiLogger_splitMessagesByLevel() {
 
 	errLgrOpts := xlog.NewCommonOpts()
 	errLgrOpts.MinLevel = xlog.FixedLevelProvider(xlog.LevelWarning)
-	errLgrOpts.Time = func() interface{} { // mock time for output check
+	errLgrOpts.Time = func() any { // mock time for output check
 		return "2022-03-20T16:01:20Z"
 	}
 	errLgrOpts.Source = xlog.SourceProvider(5, 1) // keep only filename for output check
@@ -32,7 +32,7 @@ func ExampleMultiLogger_splitMessagesByLevel() {
 	dbgLgrOpts := xlog.NewCommonOpts()
 	dbgLgrOpts.MinLevel = xlog.FixedLevelProvider(xlog.LevelDebug)
 	dbgLgrOpts.MaxLevel = xlog.FixedLevelProvider(xlog.LevelInfo)
-	dbgLgrOpts.Time = func() interface{} { // mock time for output check
+	dbgLgrOpts.Time = func() any { // mock time for output check
 		return "2022-03-20T16:01:20Z"
 	}
 	dbgLgrOpts.Source = xlog.SourceProvider(5, 1) // keep only filename for output check
@@ -57,7 +57,7 @@ func ExampleMultiLogger_logToStdOutAndCustomFile() {
 
 	stdOutLgrOpts := xlog.NewCommonOpts()
 	stdOutLgrOpts.MinLevel = xlog.FixedLevelProvider(xlog.LevelNone)
-	stdOutLgrOpts.Time = func() interface{} { // mock time for output check
+	stdOutLgrOpts.Time = func() any { // mock time for output check
 		return "2022-03-15T16:01:20Z"
 	}
 	stdOutLgrOpts.Source = xlog.SourceProvider(5, 1) // keep only filename for output check
@@ -68,7 +68,7 @@ func ExampleMultiLogger_logToStdOutAndCustomFile() {
 
 	fileLgrOpts := xlog.NewCommonOpts()
 	fileLgrOpts.MinLevel = xlog.FixedLevelProvider(xlog.LevelNone)
-	fileLgrOpts.Time = func() interface{} { // mock time for output check
+	fileLgrOpts.Time = func() any { // mock time for output check
 		return "2022-03-15T16:01:20Z"
 	}
 	fileLgrOpts.Source = xlog.SourceProvider(5, 1) // keep only filename for output check
@@ -122,7 +122,7 @@ func TestMultiLogger_logsOnEveryLogger(t *testing.T) {
 	for _, lvl := range levels {
 		for _, logger := range loggers {
 			lgr := logger.(*xlog.MockLogger)
-			lgr.SetLogCallback(lvl, func(keyValues ...interface{}) {
+			lgr.SetLogCallback(lvl, func(keyValues ...any) {
 				assertEqual(t, kv, keyValues)
 			})
 		}

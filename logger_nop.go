@@ -10,26 +10,26 @@ package xlog
 type NopLogger struct{}
 
 // Critical logs application component unavailable, fatal events.
-func (NopLogger) Critical(...interface{}) {}
+func (NopLogger) Critical(...any) {}
 
 // Error logs runtime errors that
 // should typically be logged and monitored.
-func (NopLogger) Error(...interface{}) {}
+func (NopLogger) Error(...any) {}
 
 // Warn logs exceptional occurrences that are not errors.
 // Example: Use of deprecated APIs, poor use of an API, undesirable things
 // that are not necessarily wrong.
-func (NopLogger) Warn(...interface{}) {}
+func (NopLogger) Warn(...any) {}
 
 // Info logs interesting events.
 // Example: User logs in, SQL logs.
-func (NopLogger) Info(...interface{}) {}
+func (NopLogger) Info(...any) {}
 
 // Debug logs detailed debug information.
-func (NopLogger) Debug(...interface{}) {}
+func (NopLogger) Debug(...any) {}
 
 // Log logs arbitrary data.
-func (NopLogger) Log(...interface{}) {}
+func (NopLogger) Log(...any) {}
 
 // Close nicely closes logger.
 func (NopLogger) Close() error { return nil }

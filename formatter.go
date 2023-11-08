@@ -13,10 +13,10 @@ import (
 
 // Formatter writes the provided key-values in a given format.
 // Returns error in case something goes wrong.
-type Formatter func(w io.Writer, keyValues []interface{}) error
+type Formatter func(w io.Writer, keyValues []any) error
 
 // stringify returns string representation of an interface.
-func stringify(i interface{}) string {
+func stringify(i any) string {
 	switch data := i.(type) {
 	case string:
 		return data

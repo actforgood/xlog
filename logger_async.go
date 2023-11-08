@@ -23,7 +23,7 @@ type AsyncLogger struct {
 	// internal channel where logs are pushed for processing.
 	// its buffer size is 256 by default.
 	// can be set with [AsyncLoggerWithChannelSize] functional option.
-	entriesChan chan []interface{}
+	entriesChan chan []any
 	// no of workers to start for processing entriesChan.
 	workersNo int
 	// common options for this logger.
@@ -65,7 +65,7 @@ func NewAsyncLogger(w io.Writer, opts ...AsyncLoggerOption) *AsyncLogger {
 	// if no option was provided for entriesChan, use default.
 	if logger.entriesChan == nil {
 		const defaultEntriesChanSize = 256
-		logger.entriesChan = make(chan []interface{}, defaultEntriesChanSize)
+		logger.entriesChan = make(chan []any, defaultEntriesChanSize)
 	}
 
 	// start internal goroutine(s) that will log entries async.
@@ -97,36 +97,36 @@ func (logger *AsyncLogger) logAsync() {
 }
 
 // Critical logs application component unavailable, fatal events.
-func (logger *AsyncLogger) Critical(keyValues ...interface{}) {
+func (logger *AsyncLogger) Critical(keyValues ...any) {
 	logger.pushLog(LevelCritical, keyValues...)
 }
 
 // Error logs runtime errors that
 // should typically be logged and monitored.
-func (logger *AsyncLogger) Error(keyValues ...interface{}) {
+func (logger *AsyncLogger) Error(keyValues ...any) {
 	logger.pushLog(LevelError, keyValues...)
 }
 
 // Warn logs exceptional occurrences that are not errors.
 // Example: Use of deprecated APIs, poor use of an API, undesirable things
 // that are not necessarily wrong.
-func (logger *AsyncLogger) Warn(keyValues ...interface{}) {
+func (logger *AsyncLogger) Warn(keyValues ...any) {
 	logger.pushLog(LevelWarning, keyValues...)
 }
 
 // Info logs interesting events.
 // Example: User logs in, SQL logs.
-func (logger *AsyncLogger) Info(keyValues ...interface{}) {
+func (logger *AsyncLogger) Info(keyValues ...any) {
 	logger.pushLog(LevelInfo, keyValues...)
 }
 
 // Debug logs detailed debug information.
-func (logger *AsyncLogger) Debug(keyValues ...interface{}) {
+func (logger *AsyncLogger) Debug(keyValues ...any) {
 	logger.pushLog(LevelDebug, keyValues...)
 }
 
 // Log logs arbitrary data.
-func (logger *AsyncLogger) Log(keyValues ...interface{}) {
+func (logger *AsyncLogger) Log(keyValues ...any) {
 	logger.pushLog(LevelNone, keyValues...)
 }
 
@@ -165,7 +165,7 @@ func (logger *AsyncLogger) isClosed() bool {
 // Using [AsyncLoggerWithChannelSize] to set a higher value to increase
 // throughput in such case can be helpful. Also setting more workers can
 // be helpful, see [AsyncLoggerWithWorkersNo].
-func (logger *AsyncLogger) pushLog(lvl Level, keyValues ...interface{}) {
+func (logger *AsyncLogger) pushLog(lvl Level, keyValues ...any) {
 	// ignore log conditions check.
 	if !logger.opts.BetweenMinMax(lvl) {
 		return

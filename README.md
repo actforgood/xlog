@@ -81,7 +81,7 @@ xlog.SourceProvider(4, 3) // => "src":"/go/xlog/example.go:65"
 
 ###### Configuring additional key-values to be logged with every log.
 ```go
-xOpts.AdditionalKeyValues = []interface{}{
+xOpts.AdditionalKeyValues = []any{
 	"app", "demoXlog",
 	"env", "prod",
 	"release", "v1.10.0",
@@ -93,7 +93,7 @@ By design, logger contract does not return error from its methods.
 A no operation `ErrorHandler` is set by default. You can change it to something else
 if suitable. For example, log with standard go logger the error.
 ```go
-xOpts.ErrHandler = func(err error, keyValues []interface{}) {
+xOpts.ErrHandler = func(err error, keyValues []any) {
 	// import "log"
 	log.Printf("An error occurred during logging. err = %v, logParams = %v", err, keyValues)
 }

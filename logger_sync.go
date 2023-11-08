@@ -48,36 +48,36 @@ func NewSyncLogger(w io.Writer, opts ...SyncLoggerOption) *SyncLogger {
 }
 
 // Critical logs application component unavailable, fatal events.
-func (logger *SyncLogger) Critical(keyValues ...interface{}) {
+func (logger *SyncLogger) Critical(keyValues ...any) {
 	logger.log(LevelCritical, keyValues...)
 }
 
 // Error logs runtime errors that
 // should typically be logged and monitored.
-func (logger *SyncLogger) Error(keyValues ...interface{}) {
+func (logger *SyncLogger) Error(keyValues ...any) {
 	logger.log(LevelError, keyValues...)
 }
 
 // Warn logs exceptional occurrences that are not errors.
 // Example: Use of deprecated APIs, poor use of an API, undesirable things
 // that are not necessarily wrong.
-func (logger *SyncLogger) Warn(keyValues ...interface{}) {
+func (logger *SyncLogger) Warn(keyValues ...any) {
 	logger.log(LevelWarning, keyValues...)
 }
 
 // Info logs interesting events.
 // Example: User logs in, SQL logs.
-func (logger *SyncLogger) Info(keyValues ...interface{}) {
+func (logger *SyncLogger) Info(keyValues ...any) {
 	logger.log(LevelInfo, keyValues...)
 }
 
 // Debug logs detailed debug information.
-func (logger *SyncLogger) Debug(keyValues ...interface{}) {
+func (logger *SyncLogger) Debug(keyValues ...any) {
 	logger.log(LevelDebug, keyValues...)
 }
 
 // Log logs arbitrary data.
-func (logger *SyncLogger) Log(keyValues ...interface{}) {
+func (logger *SyncLogger) Log(keyValues ...any) {
 	logger.log(LevelNone, keyValues...)
 }
 
@@ -95,7 +95,7 @@ func (logger *SyncLogger) Close() error {
 
 // log is used internally to write the log, if eligible.
 // Default key-values are prepended to user passed ones.
-func (logger *SyncLogger) log(lvl Level, keyValues ...interface{}) {
+func (logger *SyncLogger) log(lvl Level, keyValues ...any) {
 	// ignore log conditions check.
 	if !logger.opts.BetweenMinMax(lvl) {
 		return

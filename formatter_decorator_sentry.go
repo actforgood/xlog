@@ -14,13 +14,13 @@ import (
 )
 
 var bufPool = sync.Pool{
-	New: func() interface{} {
+	New: func() any {
 		return new(bytes.Buffer)
 	},
 }
 
 // extractLevel searches for level label and returns its byte representation.
-func extractLevel(labeledLevels map[string]Level, levelKey string, keyValues []interface{}) Level {
+func extractLevel(labeledLevels map[string]Level, levelKey string, keyValues []any) Level {
 	if lvl, found := labeledLevels[extractKeyValue(levelKey, keyValues).(string)]; found {
 		return lvl
 	}
@@ -29,7 +29,7 @@ func extractLevel(labeledLevels map[string]Level, levelKey string, keyValues []i
 }
 
 // extractKeyValue searches for a key and returns its value.
-func extractKeyValue(key string, keyValues []interface{}) interface{} {
+func extractKeyValue(key string, keyValues []any) any {
 	for idx := 0; idx < len(keyValues); idx += 2 {
 		if keyValues[idx] == key && idx+1 < len(keyValues) {
 			return keyValues[idx+1]
@@ -55,7 +55,7 @@ var SentryFormatter = func(formatter Formatter, hub *sentry.Hub, opts *CommonOpt
 		labeledLevels = flipLevelLabels(opts.LevelLabels)
 	)
 
-	return func(_ io.Writer, keyValues []interface{}) error {
+	return func(_ io.Writer, keyValues []any) error {
 		keyValues = AppendNoValue(keyValues)
 
 		buf := bufPool.Get().(*bytes.Buffer)

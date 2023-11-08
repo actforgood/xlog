@@ -20,7 +20,7 @@ func ExampleSyncLogger_devLogger() {
 
 	opts := xlog.NewCommonOpts()
 	opts.MinLevel = xlog.FixedLevelProvider(xlog.LevelNone)
-	opts.Time = func() interface{} { // mock time for output check
+	opts.Time = func() any { // mock time for output check
 		return "2022-03-14T16:01:20Z"
 	}
 	opts.Source = xlog.SourceProvider(4, 1)   // keep only filename for output check
@@ -52,7 +52,7 @@ func TestTextFormatter_successfullyWritesText(t *testing.T) {
 		subject   = xlog.TextFormatter(xlog.NewCommonOpts())
 		dummy     = dummyStringer{Name: "John Doe"}
 		someErr   = errors.New("test err.Error() is serialized")
-		keyValues = []interface{}{
+		keyValues = []any{
 			"foo", "bar",
 			"age", 34,
 			"computation", 123.456,
@@ -85,7 +85,7 @@ func TestTextFormatter_returnsWriteErr(t *testing.T) {
 	// arrange
 	var (
 		subject   = xlog.TextFormatter(xlog.NewCommonOpts())
-		keyValues = []interface{}{"foo", "bar"}
+		keyValues = []any{"foo", "bar"}
 		writer    = new(MockWriter)
 	)
 	writer.SetWriteCallback(WriteCallbackErr)
@@ -102,7 +102,7 @@ func BenchmarkTextFormatter(b *testing.B) {
 	var (
 		subject = xlog.TextFormatter(xlog.NewCommonOpts())
 		dummy   = dummyStringer{Name: "John Doe"}
-		input   = []interface{}{
+		input   = []any{
 			"foo", "bar",
 			"age", 34,
 			"computation", 123.456,

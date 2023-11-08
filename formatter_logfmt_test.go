@@ -25,11 +25,11 @@ func ExampleSyncLogger_withLogfmt() {
 
 	opts := xlog.NewCommonOpts()
 	opts.MinLevel = xlog.FixedLevelProvider(xlog.LevelDebug)
-	opts.AdditionalKeyValues = []interface{}{
+	opts.AdditionalKeyValues = []any{
 		"appName", "demo",
 		"env", "dev",
 	}
-	opts.Time = func() interface{} { // mock time for output check
+	opts.Time = func() any { // mock time for output check
 		return "2022-04-12T16:01:20Z"
 	}
 	opts.Source = xlog.SourceProvider(4, 1) // keep only filename for output check
@@ -54,7 +54,7 @@ func TestLogfileFormatter_successfullyWritesKeyValues(t *testing.T) {
 		subject   = xlog.LogfmtFormatter
 		dummy     = dummyStringer{Name: "John Doe"}
 		someErr   = errors.New("test err.Error() is serialized")
-		keyValues = []interface{}{
+		keyValues = []any{
 			"foo", "bar",
 			"age", 34,
 			"computation", 123.456,
@@ -102,7 +102,7 @@ func TestLogfmtFormatter_returnsWriteErr(t *testing.T) {
 	var (
 		subject   = xlog.LogfmtFormatter
 		dummy     = dummyStringer{Name: "John Doe"}
-		keyValues = []interface{}{
+		keyValues = []any{
 			"foo", "bar",
 			"age", 34,
 			"computation", 123.456,
@@ -127,7 +127,7 @@ func BenchmarkLogfmtFormatter(b *testing.B) {
 	var (
 		subject = xlog.LogfmtFormatter
 		dummy   = dummyStringer{Name: "John Doe"}
-		input   = []interface{}{
+		input   = []any{
 			"foo", "bar",
 			"age", 34,
 			"computation", 123.456,

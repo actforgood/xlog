@@ -18,7 +18,7 @@ type AsyncLoggerOption func(*AsyncLogger)
 // throughput in such case can be helpful.
 func AsyncLoggerWithChannelSize(logsChanSize uint16) AsyncLoggerOption {
 	return func(logger *AsyncLogger) {
-		logger.entriesChan = make(chan []interface{}, logsChanSize)
+		logger.entriesChan = make(chan []any, logsChanSize)
 	}
 }
 

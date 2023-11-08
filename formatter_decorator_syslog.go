@@ -55,14 +55,14 @@ const SyslogPrefixCee = "@cee:"
 var ErrNotSyslogWriter = errors.New("the writer should be a *syslog.Writer")
 
 // SyslogLevelProvider is a function that extracts the syslog level.
-type SyslogLevelProvider func(keyValues []interface{}) syslog.Priority
+type SyslogLevelProvider func(keyValues []any) syslog.Priority
 
 const noLevel = syslog.Priority(-100000)
 
 // NewDefaultSyslogLevelProvider returns a SyslogLevelProvider that maps xlog default Levels
 // to their appropriate syslog Levels.
 func NewDefaultSyslogLevelProvider(opts *CommonOpts) SyslogLevelProvider {
-	levelsMap := make(map[interface{}]syslog.Priority, 5)
+	levelsMap := make(map[any]syslog.Priority, 5)
 	for lvl, label := range opts.LevelLabels {
 		switch lvl {
 		case LevelDebug:
@@ -85,9 +85,9 @@ func NewDefaultSyslogLevelProvider(opts *CommonOpts) SyslogLevelProvider {
 // and returns the syslog level from provided map as second param.
 func NewExtractFromKeySyslogLevelProvider(
 	key string,
-	syslogLevels map[interface{}]syslog.Priority,
+	syslogLevels map[any]syslog.Priority,
 ) SyslogLevelProvider {
-	return func(keyValues []interface{}) syslog.Priority {
+	return func(keyValues []any) syslog.Priority {
 		syslogLevel, found := syslogLevels[extractKeyValue(key, keyValues)]
 		if found {
 			return syslogLevel
@@ -108,7 +108,7 @@ var SyslogFormatter = func(
 	syslogLevelProvider SyslogLevelProvider,
 	prefix string,
 ) Formatter {
-	return func(w io.Writer, keyValues []interface{}) error {
+	return func(w io.Writer, keyValues []any) error {
 		sw, ok := w.(syslogWriter)
 		if !ok {
 			return ErrNotSyslogWriter

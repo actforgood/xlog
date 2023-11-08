@@ -94,7 +94,7 @@ func TestSentryFormatter_successfullySendsDataToSentry(t *testing.T) {
 				sentryHub,
 				commOpts,
 			)
-			formatter.SetFormatCallback(func(w io.Writer, kv []interface{}) error {
+			formatter.SetFormatCallback(func(w io.Writer, kv []any) error {
 				assertEqual(t, keyValues, kv)
 				buf, ok := w.(*bytes.Buffer)
 				if assertTrue(t, ok) {
@@ -179,7 +179,7 @@ func TestSentryFormatter_concurrency(t *testing.T) {
 	)
 	sentryHub.Scope().AddEventProcessor(func(event *sentry.Event, _ *sentry.EventHint) *sentry.Event {
 		scopeMessageProcessedCallsCnt++
-		var logData map[string]interface{}
+		var logData map[string]any
 		if err := json.Unmarshal([]byte(event.Message), &logData); err != nil {
 			t.Error(err.Error())
 

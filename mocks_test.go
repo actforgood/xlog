@@ -64,7 +64,7 @@ type MockFormatter struct {
 }
 
 // Format is the Formatter function.
-func (mock *MockFormatter) Format(w io.Writer, keyValues []interface{}) error {
+func (mock *MockFormatter) Format(w io.Writer, keyValues []any) error {
 	atomic.AddUint32(&mock.formatCallsCnt, 1)
 	if mock.formatCallback != nil {
 		return mock.formatCallback(w, keyValues)
@@ -87,7 +87,7 @@ func (mock *MockFormatter) FormatCallsCount() int {
 
 // FormatCallbackErr is a predefined MockFormatter callback that returns
 // an error.
-func FormatCallbackErr(_ io.Writer, _ []interface{}) error {
+func FormatCallbackErr(_ io.Writer, _ []any) error {
 	return ErrFormat
 }
 
@@ -98,7 +98,7 @@ type MockErrorHandler struct {
 }
 
 // Handle is the ErrorHandler function.
-func (mock *MockErrorHandler) Handle(err error, keyValues []interface{}) {
+func (mock *MockErrorHandler) Handle(err error, keyValues []any) {
 	atomic.AddUint32(&mock.handleCallsCnt, 1)
 	if mock.handleCallback != nil {
 		mock.handleCallback(err, keyValues)

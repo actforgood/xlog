@@ -23,7 +23,7 @@ func NewMultiLogger(loggers ...Logger) *MultiLogger {
 }
 
 // Critical logs application component unavailable, fatal events.
-func (logger *MultiLogger) Critical(keyValues ...interface{}) {
+func (logger *MultiLogger) Critical(keyValues ...any) {
 	for _, lgr := range logger.loggers {
 		lgr.Critical(keyValues...)
 	}
@@ -31,7 +31,7 @@ func (logger *MultiLogger) Critical(keyValues ...interface{}) {
 
 // Error logs runtime errors that
 // should typically be logged and monitored.
-func (logger *MultiLogger) Error(keyValues ...interface{}) {
+func (logger *MultiLogger) Error(keyValues ...any) {
 	for _, lgr := range logger.loggers {
 		lgr.Error(keyValues...)
 	}
@@ -40,7 +40,7 @@ func (logger *MultiLogger) Error(keyValues ...interface{}) {
 // Warn logs exceptional occurrences that are not errors.
 // Example: Use of deprecated APIs, poor use of an API, undesirable things
 // that are not necessarily wrong.
-func (logger *MultiLogger) Warn(keyValues ...interface{}) {
+func (logger *MultiLogger) Warn(keyValues ...any) {
 	for _, lgr := range logger.loggers {
 		lgr.Warn(keyValues...)
 	}
@@ -48,21 +48,21 @@ func (logger *MultiLogger) Warn(keyValues ...interface{}) {
 
 // Info logs interesting events.
 // Example: User logs in, SQL logs.
-func (logger *MultiLogger) Info(keyValues ...interface{}) {
+func (logger *MultiLogger) Info(keyValues ...any) {
 	for _, lgr := range logger.loggers {
 		lgr.Info(keyValues...)
 	}
 }
 
 // Debug logs detailed debug information.
-func (logger *MultiLogger) Debug(keyValues ...interface{}) {
+func (logger *MultiLogger) Debug(keyValues ...any) {
 	for _, lgr := range logger.loggers {
 		lgr.Debug(keyValues...)
 	}
 }
 
 // Log logs arbitrarily data.
-func (logger *MultiLogger) Log(keyValues ...interface{}) {
+func (logger *MultiLogger) Log(keyValues ...any) {
 	for _, lgr := range logger.loggers {
 		lgr.Log(keyValues...)
 	}
