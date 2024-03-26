@@ -284,7 +284,7 @@ func TestSyslogFormatter_concurrency(t *testing.T) {
 	// act
 	for i := 0; i < goroutinesNo; i++ {
 		wg.Add(1)
-		go func(logger xlog.Formatter, threadNo int) {
+		go func(_ xlog.Formatter, threadNo int) {
 			defer wg.Done()
 			for j := 0; j < logsNo; j++ {
 				keyValues := getInputKeyValues()

@@ -15,7 +15,7 @@ The logs can be formatted in JSON, logfmt, custom text format.
 ### Installation
 
 ```shell
-$ go get -u github.com/actforgood/xlog
+$ go get github.com/actforgood/xlog
 ```
 
 
