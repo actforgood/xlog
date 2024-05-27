@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	github.com/actforgood/xerr v1.4.0
-	github.com/getsentry/sentry-go v0.27.0
+	github.com/getsentry/sentry-go v0.28.0
 	github.com/go-logfmt/logfmt v0.6.0
 )
 
