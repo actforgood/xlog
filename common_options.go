@@ -174,7 +174,11 @@ func FixedLevelProvider(lvl Level) LevelProvider {
 // As it is called on each log, you may change during application run
 // the underlying env without restarting the app, and new configured
 // value will be used in place, if suitable.
-func EnvLevelProvider(envLvlKey string, defaultLvl Level, levelLabels map[Level]string) LevelProvider {
+func EnvLevelProvider(
+	envLvlKey string,
+	defaultLvl Level,
+	levelLabels map[Level]string,
+) LevelProvider {
 	labeledLevels := flipLevelLabels(levelLabels)
 
 	return func() Level {

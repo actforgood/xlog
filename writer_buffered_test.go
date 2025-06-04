@@ -233,7 +233,7 @@ func TestBufferedWriter_concurrency(t *testing.T) {
 	// N threads will write their own number.
 	// At the end we will check the sum of all written numbers
 	// (we know from math that sum of first N consecutive numbers is N * (N+1) / 2).
-	for i := 0; i < goroutinesNo; i++ {
+	for i := range goroutinesNo {
 		wg.Add(1)
 		go func(threadNo int) {
 			defer wg.Done()
@@ -260,7 +260,7 @@ func TestBufferedWriter_concurrency(t *testing.T) {
 			continue
 		}
 		linesCount++
-		line = line[0 : len(line)-1] // remove ending '\n'
+		line = line[:len(line)-1] // remove ending '\n'
 
 		data, err := strconv.Atoi(string(line))
 		if err != nil {

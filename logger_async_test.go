@@ -296,15 +296,14 @@ func TestAsyncLogger_concurrency(t *testing.T) {
 	commOpts.SourceKey = ""
 	commOpts.Time = staticTimeProvider
 
-	for _, testData := range tests {
-		test := testData // capture range variable
+	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			// act
-			for i := 0; i < goroutinesNo; i++ {
+			for i := range goroutinesNo {
 				wg.Add(1)
 				go func(logger xlog.Logger, threadNo int) {
 					defer wg.Done()
-					for j := 0; j < logsNo; j++ {
+					for j := range logsNo {
 						keyValues := getInputKeyValues()
 						keyValues = append(keyValues, "threadNo", threadNo+1, "logNo", j+1)
 						logger.Log(keyValues...)
@@ -358,7 +357,7 @@ func BenchmarkAsyncLogger_json_withDiscardWriter_with256ChanSize_with1Worker_seq
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	for n := 0; n < b.N; n++ {
+	for range b.N {
 		subject.Error(kv...)
 	}
 }
@@ -386,14 +385,14 @@ func BenchmarkAsyncLogger_json_withDiscardWriter_with256ChanSize_with4Workers(b 
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	for n := 0; n < b.N; n++ {
+	for range b.N {
 		subject.Error(kv...)
 	}
 }
 
 func BenchmarkAsyncLogger_json_withFileWriter_with256ChanSize_with1Worker(b *testing.B) {
-	f := setUpFile(b.Name())
-	defer tearDownFile(f)
+	f := setUpFile(b.TempDir(), b.Name())
+	defer f.Close()
 	subject := makeAsyncLogger(f, 256, 1)
 	defer subject.Close()
 	kv := getBenchmarkKeyVals()
@@ -401,14 +400,14 @@ func BenchmarkAsyncLogger_json_withFileWriter_with256ChanSize_with1Worker(b *tes
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	for n := 0; n < b.N; n++ {
+	for range b.N {
 		subject.Error(kv...)
 	}
 }
 
 func BenchmarkAsyncLogger_json_withBufferedFileWriter_with256ChanSize_with1Worker(b *testing.B) {
-	f := setUpFile(b.Name())
-	defer tearDownFile(f)
+	f := setUpFile(b.TempDir(), b.Name())
+	defer f.Close()
 	subject := makeAsyncLogger(xlog.NewBufferedWriter(f), 256, 1)
 	defer subject.Close()
 	kv := getBenchmarkKeyVals()
@@ -416,14 +415,14 @@ func BenchmarkAsyncLogger_json_withBufferedFileWriter_with256ChanSize_with1Worke
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	for n := 0; n < b.N; n++ {
+	for range b.N {
 		subject.Error(kv...)
 	}
 }
 
 func BenchmarkAsyncLogger_json_withFileWriter_with1024ChanSize_with4Workers(b *testing.B) {
-	f := setUpFile(b.Name())
-	defer tearDownFile(f)
+	f := setUpFile(b.TempDir(), b.Name())
+	defer f.Close()
 	subject := makeAsyncLogger(f, 1024, 4)
 	defer subject.Close()
 	kv := getBenchmarkKeyVals()
@@ -431,14 +430,14 @@ func BenchmarkAsyncLogger_json_withFileWriter_with1024ChanSize_with4Workers(b *t
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	for n := 0; n < b.N; n++ {
+	for range b.N {
 		subject.Error(kv...)
 	}
 }
 
 func BenchmarkAsyncLogger_json_withBufferedFileWriter_with1024ChanSize_with4Workers(b *testing.B) {
-	f := setUpFile(b.Name())
-	defer tearDownFile(f)
+	f := setUpFile(b.TempDir(), b.Name())
+	defer f.Close()
 	subject := makeAsyncLogger(xlog.NewBufferedWriter(f), 1024, 4)
 	defer subject.Close()
 	kv := getBenchmarkKeyVals()
@@ -446,7 +445,7 @@ func BenchmarkAsyncLogger_json_withBufferedFileWriter_with1024ChanSize_with4Work
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	for n := 0; n < b.N; n++ {
+	for range b.N {
 		subject.Error(kv...)
 	}
 }
@@ -461,9 +460,9 @@ func BenchmarkAsyncLogger_json_withDiscardWriter_with256ChanSize_with1Worker_wit
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	for n := 0; n < b.N; n++ {
+	for range b.N {
 		wg.Add(goroutinesNo)
-		for i := 0; i < goroutinesNo; i++ {
+		for range goroutinesNo {
 			go func() {
 				defer wg.Done()
 				subject.Error(kv...)
@@ -483,9 +482,9 @@ func BenchmarkAsyncLogger_json_withDiscardWriter_with1024ChanSize_with4Workers_w
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	for n := 0; n < b.N; n++ {
+	for range b.N {
 		wg.Add(goroutinesNo)
-		for i := 0; i < goroutinesNo; i++ {
+		for range goroutinesNo {
 			go func() {
 				defer wg.Done()
 				subject.Error(kv...)
@@ -496,8 +495,8 @@ func BenchmarkAsyncLogger_json_withDiscardWriter_with1024ChanSize_with4Workers_w
 }
 
 func BenchmarkAsyncLogger_json_withFileWriter_with256ChanSize_with1Worker_withConcurrency10(b *testing.B) {
-	f := setUpFile(b.Name())
-	defer tearDownFile(f)
+	f := setUpFile(b.TempDir(), b.Name())
+	defer f.Close()
 	subject := makeAsyncLogger(f, 256, 1)
 	defer subject.Close()
 	kv := getBenchmarkKeyVals()
@@ -507,9 +506,9 @@ func BenchmarkAsyncLogger_json_withFileWriter_with256ChanSize_with1Worker_withCo
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	for n := 0; n < b.N; n++ {
+	for range b.N {
 		wg.Add(goroutinesNo)
-		for i := 0; i < goroutinesNo; i++ {
+		for range goroutinesNo {
 			go func() {
 				defer wg.Done()
 				subject.Error(kv...)
@@ -520,8 +519,8 @@ func BenchmarkAsyncLogger_json_withFileWriter_with256ChanSize_with1Worker_withCo
 }
 
 func BenchmarkAsyncLogger_json_withFileWriter_with1024ChanSize_with4Workers_withConcurrency100(b *testing.B) {
-	f := setUpFile(b.Name())
-	defer tearDownFile(f)
+	f := setUpFile(b.TempDir(), b.Name())
+	defer f.Close()
 	subject := makeAsyncLogger(f, 1024, 24)
 	defer subject.Close()
 	kv := getBenchmarkKeyVals()
@@ -531,9 +530,9 @@ func BenchmarkAsyncLogger_json_withFileWriter_with1024ChanSize_with4Workers_with
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	for n := 0; n < b.N; n++ {
+	for range b.N {
 		wg.Add(goroutinesNo)
-		for i := 0; i < goroutinesNo; i++ {
+		for range goroutinesNo {
 			go func() {
 				defer wg.Done()
 				subject.Error(kv...)

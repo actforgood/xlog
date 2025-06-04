@@ -84,9 +84,7 @@ func TestSentryFormatter_successfullySendsDataToSentry(t *testing.T) {
 		return event
 	})
 
-	for idx, level := range levels {
-		testLvl := level // capture range variable
-		testIdx := idx
+	for testIdx, testLvl := range levels {
 		t.Run(fmt.Sprintf("level_%s", commOpts.LevelLabels[testLvl]), func(t *testing.T) {
 			keyValues := getExpectedKeyValues(testLvl, commOpts.LevelLabels)
 			subject := xlog.SentryFormatter(
@@ -194,11 +192,11 @@ func TestSentryFormatter_concurrency(t *testing.T) {
 	})
 
 	// act
-	for i := 0; i < goroutinesNo; i++ {
+	for i := range goroutinesNo {
 		wg.Add(1)
 		go func(_ xlog.Formatter, threadNo int) {
 			defer wg.Done()
-			for j := 0; j < logsNo; j++ {
+			for j := range logsNo {
 				keyValues := getInputKeyValues()
 				keyValues = append(keyValues, "threadNo", threadNo+1, "logNo", j+1)
 				resultErr := subject(io.Discard, keyValues)
@@ -236,7 +234,7 @@ func BenchmarkSentryFormatter_json_syncLogger(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	for n := 0; n < b.N; n++ {
+	for range b.N {
 		logger.Error(kv...)
 	}
 }
@@ -263,7 +261,7 @@ func BenchmarkSentryFormatter_json_asyncLogger(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	for n := 0; n < b.N; n++ {
+	for range b.N {
 		logger.Error(kv...)
 	}
 }

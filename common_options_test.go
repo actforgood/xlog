@@ -125,8 +125,7 @@ func testCommonOptsBetweenMinMaxLevelNone(t *testing.T) {
 		},
 	}
 
-	for _, testData := range tests {
-		test := testData // capture range variable
+	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			subject.MinLevel = xlog.FixedLevelProvider(test.min)
 			subject.MaxLevel = xlog.FixedLevelProvider(test.max)
@@ -183,8 +182,7 @@ func testCommonOptsBetweenMinMaxLevelDebug(t *testing.T) {
 		},
 	}
 
-	for _, testData := range tests {
-		test := testData // capture range variable
+	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			subject.MinLevel = xlog.FixedLevelProvider(test.min)
 			subject.MaxLevel = xlog.FixedLevelProvider(test.max)
@@ -241,8 +239,7 @@ func testCommonOptsBetweenMinMaxLevelInfo(t *testing.T) {
 		},
 	}
 
-	for _, testData := range tests {
-		test := testData // capture range variable
+	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			subject.MinLevel = xlog.FixedLevelProvider(test.min)
 			subject.MaxLevel = xlog.FixedLevelProvider(test.max)
@@ -299,8 +296,7 @@ func testCommonOptsBetweenMinMaxLevelWarning(t *testing.T) {
 		},
 	}
 
-	for _, testData := range tests {
-		test := testData // capture range variable
+	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			subject.MinLevel = xlog.FixedLevelProvider(test.min)
 			subject.MaxLevel = xlog.FixedLevelProvider(test.max)
@@ -357,8 +353,7 @@ func testCommonOptsBetweenMinMaxLevelError(t *testing.T) {
 		},
 	}
 
-	for _, testData := range tests {
-		test := testData // capture range variable
+	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			subject.MinLevel = xlog.FixedLevelProvider(test.min)
 			subject.MaxLevel = xlog.FixedLevelProvider(test.max)
@@ -403,8 +398,7 @@ func testCommonOptsBetweenMinMaxLevelCritical(t *testing.T) {
 		},
 	}
 
-	for _, testData := range tests {
-		test := testData // capture range variable
+	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			subject.MinLevel = xlog.FixedLevelProvider(test.min)
 			subject.MaxLevel = xlog.FixedLevelProvider(test.max)
@@ -594,8 +588,7 @@ func testCommonOptsDefaultKeyValuesLevel(t *testing.T) {
 		},
 	}
 
-	for _, testData := range tests {
-		test := testData // capture range variable
+	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			// act
 			result := subject.WithDefaultKeyValues(test.input)
@@ -690,18 +683,17 @@ func TestFixedLevelProvider(t *testing.T) {
 		},
 	}
 
-	for _, testData := range tests {
-		data := testData // capture range variable
-		t.Run(data.name, func(t *testing.T) {
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
 			t.Parallel()
 
-			subject := xlog.FixedLevelProvider(data.input)
-			for i := 0; i < 3; i++ {
+			subject := xlog.FixedLevelProvider(test.input)
+			for range 3 {
 				// act
 				result := subject()
 
 				// assert
-				assertEqual(t, data.input, result)
+				assertEqual(t, test.input, result)
 			}
 		})
 	}
@@ -957,7 +949,7 @@ func BenchmarkCommonOpts_WithDefaultKeyValues(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	for n := 0; n < b.N; n++ {
+	for range b.N {
 		_ = subject.WithDefaultKeyValues(xlog.LevelInfo)
 	}
 }

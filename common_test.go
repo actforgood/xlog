@@ -71,20 +71,14 @@ func getAdditionalKeyValues() []any {
 }
 
 // setUpFile creates a new file for writing logs in it on the disk.
-func setUpFile(testName string) *os.File {
+func setUpFile(tmpDir, testName string) *os.File {
 	filePattern := testName + ".log-*"
-	f, err := os.CreateTemp("", filePattern)
+	f, err := os.CreateTemp(tmpDir, filePattern)
 	if err != nil {
 		panic(err)
 	}
 
 	return f
-}
-
-// tearDownFile closes test log file and deletes it from the disk.
-func tearDownFile(f *os.File) {
-	_ = f.Close()
-	_ = os.Remove(f.Name())
 }
 
 // getBenchmarkKeyVals returns some key vals used in benchmark tests.

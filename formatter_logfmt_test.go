@@ -141,7 +141,7 @@ func BenchmarkLogfmtFormatter(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	for n := 0; n < b.N; n++ {
+	for range b.N {
 		_ = subject(io.Discard, input)
 	}
 }
@@ -160,11 +160,11 @@ func TestLogfmtFormatter_concurrency(t *testing.T) {
 	)
 
 	// act
-	for i := 0; i < goroutinesNo; i++ {
+	for i := range goroutinesNo {
 		wg.Add(1)
 		go func(threadNo int) {
 			defer wg.Done()
-			for j := 0; j < logsNo; j++ {
+			for j := range logsNo {
 				keyValues := getInputKeyValues()
 				keyValues = append(keyValues, "threadNo", threadNo+1, "logNo", j+1)
 				resultErr := subject(sw, keyValues)

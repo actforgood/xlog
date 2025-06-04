@@ -78,7 +78,7 @@ func NewAsyncLogger(w io.Writer, opts ...AsyncLoggerOption) *AsyncLogger {
 func (logger *AsyncLogger) startWorkers() {
 	logger.wg.Add(logger.workersNo)
 	worker := logger.logAsync
-	for i := 0; i < logger.workersNo; i++ {
+	for range logger.workersNo {
 		go worker()
 	}
 }

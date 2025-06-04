@@ -1,0 +1,41 @@
+version: "2"
+
+run:
+  tests: true
+
+linters:
+  default: none
+  enable:
+    - goconst
+    - gocritic
+    - godot
+    - govet
+    - ineffassign
+    - intrange
+    - lll
+    - misspell
+    - nlreturn
+    - noctx
+    - revive
+    - staticcheck
+    - unused
+    - whitespace
+  exclusions:
+    generated: lax
+    rules:
+      - linters:
+          - lll
+        path: _test\.go
+
+formatters:
+  enable:
+    - gofmt
+  settings:
+    gofmt:
+      rewrite-rules:
+        - pattern: 'interface{}'
+          replacement: 'any'
+        - pattern: 'a[b:len(a)]'
+          replacement: 'a[b:]'
+        - pattern: 'a[0:b]'
+          replacement: 'a[:b]'

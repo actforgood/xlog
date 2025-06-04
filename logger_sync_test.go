@@ -272,11 +272,11 @@ func TestSyncLogger_concurrency(t *testing.T) {
 	commOpts.Time = staticTimeProvider
 
 	// act
-	for i := 0; i < goroutinesNo; i++ {
+	for i := range goroutinesNo {
 		wg.Add(1)
 		go func(logger xlog.Logger, threadNo int) {
 			defer wg.Done()
-			for j := 0; j < logsNo; j++ {
+			for j := range logsNo {
 				keyValues := getInputKeyValues()
 				keyValues = append(keyValues, "threadNo", threadNo+1, "logNo", j+1)
 				logger.Log(keyValues...)
@@ -328,7 +328,7 @@ func BenchmarkSyncLogger_json_withDiscardWriter_sequential(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	for n := 0; n < b.N; n++ {
+	for range b.N {
 		subject.Error(kv...)
 	}
 }
@@ -349,8 +349,8 @@ func BenchmarkSyncLogger_json_withDiscardWriter_parallel(b *testing.B) {
 }
 
 func BenchmarkSyncLogger_json_withFileWriter(b *testing.B) {
-	f := setUpFile(b.Name())
-	defer tearDownFile(f)
+	f := setUpFile(b.TempDir(), b.Name())
+	defer f.Close()
 	subject := makeSyncLogger(f)
 	defer subject.Close()
 	kv := getBenchmarkKeyVals()
@@ -358,14 +358,14 @@ func BenchmarkSyncLogger_json_withFileWriter(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	for n := 0; n < b.N; n++ {
+	for range b.N {
 		subject.Error(kv...)
 	}
 }
 
 func BenchmarkSyncLogger_json_withBufferedFileWriter(b *testing.B) {
-	f := setUpFile(b.Name())
-	defer tearDownFile(f)
+	f := setUpFile(b.TempDir(), b.Name())
+	defer f.Close()
 	subject := makeSyncLogger(xlog.NewBufferedWriter(f))
 	defer subject.Close()
 	kv := getBenchmarkKeyVals()
@@ -373,7 +373,7 @@ func BenchmarkSyncLogger_json_withBufferedFileWriter(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	for n := 0; n < b.N; n++ {
+	for range b.N {
 		subject.Error(kv...)
 	}
 }

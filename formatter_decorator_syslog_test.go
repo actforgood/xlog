@@ -128,8 +128,7 @@ func TestSyslogFormatter_successfullyWritesKeyValuesByLevel(t *testing.T) {
 	)
 
 	idx := 0
-	for levelLabel, syslogLvl := range levelLabels {
-		testLvl := syslogLvl // capture range variable
+	for levelLabel, testLvl := range levelLabels {
 		testLabel := levelLabel.(string)
 		idx++
 		t.Run(fmt.Sprintf("level_%s", testLabel), func(t *testing.T) {
@@ -282,11 +281,11 @@ func TestSyslogFormatter_concurrency(t *testing.T) {
 	})
 
 	// act
-	for i := 0; i < goroutinesNo; i++ {
+	for i := range goroutinesNo {
 		wg.Add(1)
 		go func(_ xlog.Formatter, threadNo int) {
 			defer wg.Done()
-			for j := 0; j < logsNo; j++ {
+			for j := range logsNo {
 				keyValues := getInputKeyValues()
 				keyValues = append(keyValues, "threadNo", threadNo+1, "logNo", j+1)
 				resultErr := subject(writer, keyValues)
@@ -324,7 +323,7 @@ func BenchmarkSyslogFormatter_json_syncLogger(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	for n := 0; n < b.N; n++ {
+	for range b.N {
 		logger.Error(kv...)
 	}
 }
@@ -351,7 +350,7 @@ func BenchmarkSyslogFormatter_json_asyncLogger(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 
-	for n := 0; n < b.N; n++ {
+	for range b.N {
 		logger.Error(kv...)
 	}
 }
