@@ -40,7 +40,7 @@ func ExampleSyncLogger_withLogfmt() {
 	)
 	defer logger.Close()
 
-	logger.Info(xlog.MessageKey, "Hello World", "year", 2022)
+	logger.Info(xlog.MsgKey, "Hello World", "year", 2022)
 
 	// Output:
 	// date=2022-04-12T16:01:20Z lvl=INFO src=/formatter_logfmt_test.go:43 appName=demo env=dev msg="Hello World" year=2022

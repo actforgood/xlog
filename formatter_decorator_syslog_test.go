@@ -46,7 +46,7 @@ func ExampleSyncLogger_withSyslog() {
 		_ = syslogWriter.Close()
 	}()
 
-	logger.Info(xlog.MessageKey, "Hello World", "year", 2022)
+	logger.Info(xlog.MsgKey, "Hello World", "year", 2022)
 
 	// sudo tail -f /var/log/syslog
 	// Apr  1 03:03:16 bogdan-Aspire-5755G demo[7572]: {"date":"2022-04-01T00:03:16.209891806Z","lvl":"INFO","msg":"Hello World","src":"/home/bogdan/work/go/xlog/formatter_decorator_syslog_test.go:45","year":2022}
@@ -95,9 +95,9 @@ func ExampleSyncLogger_withSyslogSupportingAllSyslogLevels() {
 	}()
 
 	// log xlog levels through dedicated APIs as usual.
-	logger.Info(xlog.MessageKey, "Hello World", "year", 2022)
+	logger.Info(xlog.MsgKey, "Hello World", "year", 2022)
 	// log extra syslog levels through Log().
-	logger.Log("lvl", "NOTICE", xlog.MessageKey, "Hello World", "year", 2022)
+	logger.Log("lvl", "NOTICE", xlog.MsgKey, "Hello World", "year", 2022)
 }
 
 func TestSyslogFormatter_successfullyWritesKeyValuesByLevel(t *testing.T) {

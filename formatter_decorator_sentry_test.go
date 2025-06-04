@@ -51,7 +51,7 @@ func ExampleSyncLogger_withSentry() {
 		_ = sentry.Flush(2 * time.Second)
 	}()
 
-	logger.Info(xlog.MessageKey, "Hello World", "year", 2022)
+	logger.Info(xlog.MsgKey, "Hello World", "year", 2022)
 }
 
 func TestSentryFormatter_successfullySendsDataToSentry(t *testing.T) {

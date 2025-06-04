@@ -36,7 +36,7 @@ var TextFormatter = func(opts *CommonOpts) Formatter {
 				time = stringify(value)
 			case opts.SourceKey:
 				source = stringify(value)
-			case MessageKey:
+			case MsgKey:
 				msg = stringify(value)
 			default:
 				_, _ = extraInfoBuf.WriteString(stringify(key))

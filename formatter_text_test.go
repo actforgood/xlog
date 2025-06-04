@@ -38,7 +38,7 @@ func ExampleSyncLogger_devLogger() {
 	)
 	defer logger.Close()
 
-	logger.Debug(xlog.MessageKey, "Hello World", "year", 2022)
+	logger.Debug(xlog.MsgKey, "Hello World", "year", 2022)
 
 	// Output:
 	// 2022-03-14T16:01:20Z /formatter_text_test.go:41 [0;34mDEBUG[0m Hello World year=2022

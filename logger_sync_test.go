@@ -39,12 +39,12 @@ func ExampleSyncLogger() {
 	)
 	defer logger.Close()
 
-	logger.Log(xlog.MessageKey, "Hello World", "year", 2022)
-	logger.Debug(xlog.MessageKey, "Hello World", "year", 2022)
-	logger.Info(xlog.MessageKey, "Hello World", "year", 2022)
-	logger.Warn(xlog.MessageKey, "Hello World", "year", 2022)
-	logger.Error(xlog.MessageKey, "Could not read file", xlog.ErrorKey, io.ErrUnexpectedEOF, "file", "/some/file")
-	logger.Critical(xlog.MessageKey, "DB connection is down")
+	logger.Log(xlog.MsgKey, "Hello World", "year", 2022)
+	logger.Debug(xlog.MsgKey, "Hello World", "year", 2022)
+	logger.Info(xlog.MsgKey, "Hello World", "year", 2022)
+	logger.Warn(xlog.MsgKey, "Hello World", "year", 2022)
+	logger.Error(xlog.MsgKey, "Could not read file", xlog.ErrorKey, io.ErrUnexpectedEOF, "file", "/some/file")
+	logger.Critical(xlog.MsgKey, "DB connection is down")
 
 	// Output:
 	// {"appName":"demo","date":"2022-03-14T16:01:20Z","env":"dev","msg":"Hello World","src":"/logger_sync_test.go:42","year":2022}

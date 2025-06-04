@@ -111,7 +111,7 @@ Example of usage:
 xLogger := xlog.NewSyncLogger(os.Stdout)
 defer xLogger.Close()
 xLogger.Error(
-	xlog.MessageKey, "Could not read file",
+	xlog.MsgKey, "Could not read file",
 	xlog.ErrorKey, io.ErrUnexpectedEOF,
 	"file", "/some/file",
 )
@@ -136,7 +136,7 @@ Example of usage:
 xLogger := xlog.NewAsyncLogger(os.Stdout)
 defer xLogger.Close()
 xLogger.Error(
-	xlog.MessageKey, "Could not read file",
+	xlog.MsgKey, "Could not read file",
 	xlog.ErrorKey, io.ErrUnexpectedEOF,
 	"file", "/some/file",
 )
@@ -176,7 +176,7 @@ Example of usage:
 xLogger := xlog.NewMultiLogger(loggerA, loggerB)
 defer xLogger.Close()
 xLogger.Error(
-	xlog.MessageKey, "Could not read file",
+	xlog.MsgKey, "Could not read file",
 	xlog.ErrorKey, io.ErrUnexpectedEOF,
 	"file", "/some/file",
 )
