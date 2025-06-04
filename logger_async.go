@@ -43,7 +43,7 @@ type AsyncLogger struct {
 // NewAsyncLogger instantiates a new logger object that writes logs
 // asynchronously.
 // First param is a Writer where logs are written to.
-// Example: os.Stdout, a custom opened os.File, an in memory strings.Buffer, etc.
+// Example: [os.Stdout], a custom opened [os.File], an in memory [strings.Buffer], etc.
 // Second param is/are function option(s) through which you can customize
 // the logger. Check for AsyncLoggerWith* options.
 func NewAsyncLogger(w io.Writer, opts ...AsyncLoggerOption) *AsyncLogger {

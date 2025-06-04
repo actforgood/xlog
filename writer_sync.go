@@ -13,8 +13,8 @@ import (
 // syncWriter decorates an io.Writer so that each call to Write is synchronized
 // with a mutex, making is safe for concurrent use by multiple goroutines.
 // It should be used if writer's Write method is not thread safe.
-// For example an os.File is safe, so it doesn't need this wrapper,
-// on the other hand, a bytes.Buffer is not.
+// For example an [os.File] is safe, so it doesn't need this wrapper,
+// on the other hand, a [bytes.Buffer] is not.
 type syncWriter struct {
 	w  io.Writer
 	mu *sync.Mutex
