@@ -6,7 +6,7 @@ toolchain go1.24.3
 
 require (
 	github.com/actforgood/xerr v1.5.0
-	github.com/getsentry/sentry-go v0.33.0
+	github.com/getsentry/sentry-go v0.34.1
 	github.com/go-logfmt/logfmt v0.6.0
 )
 
