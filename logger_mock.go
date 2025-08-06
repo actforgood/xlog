@@ -11,12 +11,21 @@ import (
 
 // MockLogger is a mock for xlog.Logger contract, to be used in UT.
 type MockLogger struct {
-	logCallsCnt   map[Level]uint32
-	logCallbacks  map[Level]func(keyValues ...any)
-	closeCallsCnt uint32
-	closeErr      error
-	mu            sync.RWMutex
+	logCallsCnt     map[Level]uint32
+	logCallbacks    map[Level]func(keyValues ...any)
+	loggedKeyValues [][]any
+	closeCallsCnt   uint32
+	closeErr        error
+	mu              sync.RWMutex
 }
+
+// MockKeyNotFound is the type of value returned by [MockLogger.ValueAt]
+// in case the searched key is not found.
+type MockKeyNotFound struct{}
+
+// MockAny can be passed to [MockLogger.ValueAt] as call index,
+// in case the order is not known/important/multiple logs happen concurrently.
+const MockAny uint = 0
 
 // NewMockLogger instantiates new mocked Logger.
 func NewMockLogger() *MockLogger {
@@ -63,6 +72,12 @@ func (mock *MockLogger) logByLevel(lvl Level, keyValues ...any) {
 
 	if mock.logCallbacks[lvl] != nil {
 		mock.logCallbacks[lvl](keyValues...)
+	} else {
+		// default behaviour is to store values in a slice.
+		// values can be retrieved later with ValueAt.
+		mock.mu.Lock()
+		mock.loggedKeyValues = append(mock.loggedKeyValues, keyValues)
+		mock.mu.Unlock()
 	}
 }
 
@@ -104,4 +119,39 @@ func (mock *MockLogger) CloseCallsCount() int {
 	defer mock.mu.RUnlock()
 
 	return int(mock.closeCallsCnt)
+}
+
+// ValueAt returns the value for a key at given call, in case no callback was set.
+// Calls are positive numbers (starting with 1).
+// If the order of the calls is not known/important/multiple logs happen concurrently,
+// you can use [MockAtAnyCall].
+// If the key is not found,  [MockKeyNotFound] is returned.
+func (mock *MockLogger) ValueAt(callNo uint, forKey any) any {
+	mock.mu.RLock()
+	defer mock.mu.RUnlock()
+
+	if callNo == MockAny {
+		for call := range len(mock.loggedKeyValues) {
+			value := mock.valueAt(call+1, forKey)
+			if _, isNotFound := value.(MockKeyNotFound); !isNotFound {
+				return value
+			}
+		}
+
+		return MockKeyNotFound{}
+	}
+
+	return mock.valueAt(int(callNo), forKey)
+}
+
+func (mock *MockLogger) valueAt(callNo int, forKey any) any {
+	if len(mock.loggedKeyValues) >= callNo {
+		for i := 0; i <= len(mock.loggedKeyValues[callNo-1])-2; i += 2 {
+			if mock.loggedKeyValues[callNo-1][i] == forKey && len(mock.loggedKeyValues[callNo-1]) > i {
+				return mock.loggedKeyValues[callNo-1][i+1]
+			}
+		}
+	}
+
+	return MockKeyNotFound{}
 }
