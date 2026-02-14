@@ -11,6 +11,10 @@
 Package `xlog` provides a structured leveled Logger implemented in two different strategies: synchronous and asynchronous.  
 The logs can be formatted in JSON, logfmt, custom text format.  
 
+---
+
+> [!NOTE]
+> `xlog (v1)` will no longer be maintained as `log/slog` standard lib was introduced in Go 1.21.
 
 ### Installation
 

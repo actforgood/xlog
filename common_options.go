@@ -13,13 +13,6 @@ import (
 	"time"
 )
 
-// MessageKey represents the key under which the main message resides.
-// You are not obliged to use this key.
-//
-// Deprecated: use preferred short name MsgKey instead.
-// Will be removed in a future release.
-const MessageKey = "msg"
-
 // MsgKey represents the key under which the main message resides.
 // You are not obliged to use this key.
 const MsgKey = "msg"

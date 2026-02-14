@@ -76,18 +76,15 @@ func NewAsyncLogger(w io.Writer, opts ...AsyncLoggerOption) *AsyncLogger {
 
 // startWorkers start configured no of goroutines that process logs.
 func (logger *AsyncLogger) startWorkers() {
-	logger.wg.Add(logger.workersNo)
 	worker := logger.logAsync
 	for range logger.workersNo {
-		go worker()
+		logger.wg.Go(worker)
 	}
 }
 
 // logAsync processes logs channel and performs the actual logging.
 // it is meant to be called in another goroutine.
 func (logger *AsyncLogger) logAsync() {
-	defer logger.wg.Done() // notify waiting thread work is finished.
-
 	for keyVals := range logger.entriesChan {
 		// format the log.
 		if err := logger.formatter(logger.writer, keyVals); err != nil {

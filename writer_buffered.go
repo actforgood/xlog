@@ -73,8 +73,7 @@ func NewBufferedWriter(w io.Writer, opts ...BufferedWriterOption) *BufferedWrite
 	// start auto-flushing goroutine, if enabled.
 	if bufferedWriter.flushInterval > 0 {
 		bufferedWriter.ticker = time.NewTicker(bufferedWriter.flushInterval)
-		bufferedWriter.wg.Add(1)
-		go bufferedWriter.flushAsync()
+		bufferedWriter.wg.Go(bufferedWriter.flushAsync)
 	}
 
 	return bufferedWriter
@@ -103,7 +102,6 @@ func (bw *BufferedWriter) Write(p []byte) (int, error) {
 func (bw *BufferedWriter) flushAsync() {
 	defer func() {
 		bw.ticker.Stop() // stop the ticker to avoid mem leaks.
-		bw.wg.Done()     // notify waiting thread work is finished.
 	}()
 
 	// for is executing infinitely,
