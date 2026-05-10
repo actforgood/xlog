@@ -1,10 +1,10 @@
 module github.com/actforgood/xlog
 
-go 1.25
+go 1.25.0
 
 require (
 	github.com/actforgood/xerr v1.6.0
-	github.com/getsentry/sentry-go v0.42.0
+	github.com/getsentry/sentry-go v0.46.2
 	github.com/go-logfmt/logfmt v0.6.1
 )
 
